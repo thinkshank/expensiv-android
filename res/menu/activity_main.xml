@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_add"
+        android:onClick="addNewExpense"
+        android:orderInCategory="100"
+        android:title="@string/add"/>
+    <item
+        android:id="@+id/menu_category_wise"
+        android:onClick="showCategoryWise"
+        android:orderInCategory="100"
+        android:title="@string/category_wise"/>
+    <item
+        android:id="@+id/menu_read_sms"
+        android:onClick="showReadSms"
+        android:orderInCategory="100"
+        android:title="@string/read_sms"/>
+
+</menu>
