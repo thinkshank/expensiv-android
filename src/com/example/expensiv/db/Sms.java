@@ -1,5 +1,6 @@
 package com.example.expensiv.db;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.example.expensiv.Common;
@@ -105,6 +106,9 @@ public class Sms {
 			s+= this.smsBody;
 		}
 		
+		if(this.receiveTime!=null){
+			s+= " - " + new SimpleDateFormat("dd-MMM-yyyy").format(receiveTime);
+		}
 		
 		return s;
 	}

@@ -1,5 +1,7 @@
 package com.example.expensiv.db;
 
+import com.example.expensiv.Common;
+
 public class Expenses {
 	
 	private long id;
@@ -55,6 +57,6 @@ public class Expenses {
 	
 	@Override
 	public String toString() {
-	return(title + " - " + cost + " - " + date + "\n" + category + " - " + subCategory);
+	return(title + " - " + cost + " - " + (date.length()>9?Common.getCalendarFromUnixTimestamp(date):date) + "\n" + category + " - " + subCategory);
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.expensiv;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -46,11 +47,13 @@ public class ExpenseItemAdapter extends ArrayAdapter
 		
 		Expenses expense = (Expenses)this.data.get(position);
 		cost.setText(expense.getCost());
-		titleDate.setText(expense.getTitle() + " - " + expense.getDate());
+		titleDate.setText(expense.getTitle() + " - " + Common.getDateCompatible(expense.getDate()));
 		details.setText(expense.getCategory() + " > " + expense.getSubCategory());
 			 	
 		return row;
 		
 	}
+	
+	
 
 }

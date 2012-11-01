@@ -2,6 +2,7 @@ package com.example.expensiv;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -113,11 +114,22 @@ public class ReadSms extends Activity {
 		String from = cursor2.getString(cursor2.getColumnIndex("address"));
 		sms.setFrom(from);
 		
-		String date = cursor2.getString(cursor2.getColumnIndex("date"));
-		Log.e("shashank", "date_raw : " + cursor2.getString(cursor2.getColumnIndex("date_raw")));
-		Log.e("shashank", "msg : " + sms_id + " date : " + date );
-		//sms.setReceiveTime(new Date(date));
 		
+		
+		String date = cursor2.getString(cursor2.getColumnIndex("date"));
+		long date_raw = cursor2.getLong(cursor2.getColumnIndex("date_raw"));
+		Log.e("shashank", "date_raw : " + date_raw);
+		Log.e("shashank", "msg : " + sms_id + " date : " + date );
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(date_raw);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH)+1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		Log.e("shashank", "year-month-day :" + year + " - " + month + " - " + day); 
+		//sms.setReceiveTime(new Date(date));
+		Log.e("shashank", ""+ Common.getUnixTimestamp(2012, 9, 30, 0, 0));
+		
+		sms.setReceiveTime((Common.getCalendarFromUnixTimestamp(date_raw)).getTime());
 		return sms;
 	}
 

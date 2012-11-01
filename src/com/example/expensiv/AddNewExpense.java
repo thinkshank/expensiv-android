@@ -132,16 +132,13 @@ public class AddNewExpense extends Activity {
 
 			String strTitle = title.getText().toString();
 			String strCost = cost.getText().toString();
-			String strDate = date.getDayOfMonth() + "/" + (date.getMonth() + 1)
-					+ "/" + date.getYear();
+			String strDate = Common.datepickerToUnixTimestamp(date); 
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();
 
 			Log.d("shashank", "saving value " + title.getText().toString());
 			try {
-				// datasource.createExpense(title.getText().toString());
-				Expenses addedExpense = datasource.createExpense(strTitle,
-						strDate, strCost, strCategory, strSubCategory, msg_id);
+				Expenses addedExpense =datasource.createExpense(strTitle, strDate, strCost, strCategory, strSubCategory, msg_id);
 				Log.d("shashank", "saved to db");
 
 				getAlertDialogOk(addedExpense).show();

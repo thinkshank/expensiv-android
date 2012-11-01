@@ -1,5 +1,8 @@
 package com.example.expensiv;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.example.expensiv.db.Expenses;
@@ -26,16 +29,23 @@ public class MainActivity extends Activity {
 	
 	String [] myStringArray = {"asdfasd","asdfasdf","qwetrqwerqwe"};
 	private ExpensesDatasource datasource;
+	private int month = Calendar.getInstance().get(Calendar.MONTH);
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        if(getIntent().hasExtra("forMonth")){
+        	month = Integer.parseInt(getIntent().getStringExtra("forMonth"));
+        }
+        
         datasource = new ExpensesDatasource(this);
         datasource.open();
         
-        List<Expenses> values = datasource.getAllExpenses();
+        datasource.updateDateFormat();
+        
+        List<Expenses> values = datasource.getAllExpensesForMonth(month);
         
         //final ArrayAdapter<Expenses> adapter = 
         //		new ArrayAdapter<Expenses>(this,
@@ -67,7 +77,8 @@ public class MainActivity extends Activity {
         
         
         TextView totalExpense = (TextView)findViewById(R.id.totalExpense);
-        totalExpense.setText(" Total Expense - " + datasource.getTotal());
+        totalExpense.setText(new SimpleDateFormat("MMM").format(new Date(1970, month,1)));
+        totalExpense.append(" Total Expense - " + datasource.getTotalForMonth(month));
         
         //sendSMS("TD-12345", String message)
         
@@ -91,6 +102,18 @@ public class MainActivity extends Activity {
     //// xml onClick handlers ////
     public void addNewExpense(View view) {
     	Intent intent = new Intent(this, AddNewExpense.class);
+    	startActivity(intent);    	
+	}
+    
+    public void prev(View view) {
+    	Intent intent = new Intent(this, MainActivity.class);
+    	intent.putExtra("forMonth", "" + (month-1));
+    	startActivity(intent);    	
+	}
+    
+    public void next(View view) {
+    	Intent intent = new Intent(this, MainActivity.class);
+    	intent.putExtra("forMonth", "" + (month+1));
     	startActivity(intent);    	
 	}    
     

@@ -1,9 +1,12 @@
 package com.example.expensiv.db;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import com.example.expensiv.Common;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -44,6 +47,7 @@ public class ExpensesDatasource {
 		ContentValues values = new ContentValues();
 		//values.put(MySqlLiteHelper.COL_ID, "NULL");
 		values.put(MySqlLiteHelper.EXPENSES_TITLE, has(title)?title:"");
+		//values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:new SimpleDateFormat("dd/MMM/yyyy").format(new Date()));
 		values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:new SimpleDateFormat("dd/MMM/yyyy").format(new Date()));
 		values.put(MySqlLiteHelper.EXPENSES_COST, has(cost)?cost:"0");
 		values.put(MySqlLiteHelper.EXPENSES_SUB_CATEGORY, has(subCategory)?subCategory:"");
@@ -138,6 +142,35 @@ public class ExpensesDatasource {
 		return expenses;
 	}
 	
+	public List<Expenses> getAllExpensesForMonth(int month){
+		List<Expenses> expenses = new ArrayList<Expenses>();
+		
+		Calendar from = Common.getFirstDayOfMonth(month);
+		Calendar to = Common.getLastDayOfMonth(month);
+		
+		Log.e("shashank", "where : " + MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() );
+		Log.e("shashank", " from : " + Common.getCalendarFromUnixTimestamp(from.getTimeInMillis()).getTime());
+		Log.e("shashank", " to : " + Common.getCalendarFromUnixTimestamp(to.getTimeInMillis()).getTime());
+		
+		
+		Cursor cursor = database.query(MySqlLiteHelper.TABLE_EXPENSES, 
+									   allCols, 
+									   MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() ,
+									   null,
+									   null,
+									   null,
+									   null);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			Expenses expense = cursorToExpense(cursor);
+			expenses.add(expense);
+			cursor.moveToNext();
+		}
+		
+		cursor.close();
+		return expenses;
+	}
+	
 	public Expenses getExpenseById(long id){
 				
 		Cursor cursor = database.query(MySqlLiteHelper.TABLE_EXPENSES, 
@@ -153,6 +186,16 @@ public class ExpensesDatasource {
 	
 	public long getTotal(){
 		Cursor cursor = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES, null);
+		cursor.moveToFirst();
+		return cursor.getLong(0);
+	}
+	
+	public long getTotalForMonth(int month){
+		
+		Calendar from = Common.getFirstDayOfMonth(month);
+		Calendar to = Common.getLastDayOfMonth(month);
+		
+		Cursor cursor = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " where " + MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() , null);
 		cursor.moveToFirst();
 		return cursor.getLong(0);
 	}
@@ -210,8 +253,39 @@ public class ExpensesDatasource {
 	
 	
 	
-	public void cleanUp(){
+	public void deleteAll(){
 		database.execSQL("delete from " + MySqlLiteHelper.TABLE_EXPENSES + ";");
+	}
+	
+	public void updateDateFormat(){
+		Cursor cursor = database.query(MySqlLiteHelper.TABLE_EXPENSES, 
+				new String[]{MySqlLiteHelper.EXPENSES_ID, MySqlLiteHelper.EXPENSES_DATE}, 
+				   null,
+				   null,
+				   null,
+				   null,
+				   null);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			String date = cursor.getString(1);
+			Log.e("shashank","date : " + date);
+			if(date.contains("/")){
+				try{
+				Date dateObject = new SimpleDateFormat("dd/mm/yyyy").parse(date);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dateObject);
+				Log.e("shashank", "converted : " + date + " -> " + dateObject.toString());
+				String sql= "update " + MySqlLiteHelper.TABLE_EXPENSES + " set " + MySqlLiteHelper.EXPENSES_DATE + " = " + cal.getTimeInMillis() + " where " + MySqlLiteHelper.EXPENSES_ID + " = " + cursor.getString(0);
+				Log.e("shashank", "executing ... " +sql);
+				database.execSQL(sql);
+				
+				}catch (Exception e) {
+					e.printStackTrace();
+					cursor.moveToNext();
+				}
+			}
+			cursor.moveToNext();
+		}
 	}
 	
 	public void dropTable(){
