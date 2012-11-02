@@ -1,6 +1,5 @@
 package com.example.expensiv;
 
-import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,7 +54,8 @@ public class AddNewExpense extends Activity {
 			}
 		}		
 
-		setCurrentDateOnDatePicker();
+		DatePicker datepicker = (DatePicker) findViewById(R.id.dp_expenseDate);
+		Common.setCurrentDateOnDatePicker(datepicker);
 		
 
 	}
@@ -107,23 +106,6 @@ public class AddNewExpense extends Activity {
 		super.onResume();
 	}
 
-	public void setCurrentDateOnDatePicker() {
-		DatePicker datepicker = (DatePicker) findViewById(R.id.dp_expenseDate);
-		Calendar cal = Calendar.getInstance();
-		int day = cal.get(Calendar.DATE);
-		int month = cal.get(Calendar.MONTH);
-		int year = cal.get(Calendar.YEAR);
-		datepicker.init(year, month, day, new OnDateChangedListener() {
-
-			@Override
-			public void onDateChanged(DatePicker view, int year,
-					int monthOfYear, int dayOfMonth) {
-				Log.d("shashank", view.getDayOfMonth() + "/" + view.getMonth()
-						+ "/" + view.getYear());
-			}
-		});
-	}
-
 	// // xml onClick handler ////
 	public void saveToDB(View view) {
 		Log.d("shashank", "onClick(View view) called");
@@ -132,7 +114,7 @@ public class AddNewExpense extends Activity {
 
 			String strTitle = title.getText().toString();
 			String strCost = cost.getText().toString();
-			String strDate = Common.datepickerToUnixTimestamp(date); 
+			String strDate = Common.getUnixTimestampFromDatepicker(date); 
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();
 

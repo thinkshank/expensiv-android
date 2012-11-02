@@ -106,7 +106,17 @@ public class ExpensesDatasource {
 	public void deleteExpense(Expenses expense){
 		long id = expense.getId();
 		System.out.println("Expense with id " + id + " is deleted");
+		deleteExpense(id);
+	}
+	
+	public void deleteExpense(long id){
 		database.delete(MySqlLiteHelper.TABLE_EXPENSES, MySqlLiteHelper.EXPENSES_ID + " = " + id, null);
+	}
+	
+	public void deleteExpense(String str_id){
+		long id = Long.valueOf(str_id);
+		System.out.println("Expense with id " + id + " is deleted");
+		deleteExpense(id);
 	}
 	
 	private Expenses cursorToExpense(Cursor cursor){

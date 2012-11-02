@@ -9,6 +9,7 @@
     <string name="next">Next</string>
     <string name="addBySms">Add By SMS</string>
     <string name="save">Save</string>
+    <string name="delete">Delete</string>
     <string name="category_wise">Category wise</string>
     <string name="read_sms">Read Sms</string>
     <string name="title_activity_add_new_expense">AddNewExpense</string>

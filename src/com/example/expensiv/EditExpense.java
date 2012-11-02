@@ -1,5 +1,7 @@
 package com.example.expensiv;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,7 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
@@ -30,14 +34,19 @@ public class EditExpense extends Activity {
         
         Expenses expenseToEdit = datasource.getExpenseById(expenseIdToEdit);
         
+        EditText id = (EditText )findViewById(R.id.hidden_id);
         EditText cost = (EditText )findViewById(R.id.txt_cost);
         EditText title = (EditText )findViewById(R.id.txt_title);
-        EditText date = (EditText )findViewById(R.id.txt_date);
+        DatePicker date = (DatePicker)findViewById(R.id.dp_editExpenseDate);
         EditText category = (EditText )findViewById(R.id.txt_category);
         EditText subcategory = (EditText )findViewById(R.id.txt_sub_category);
+        id.setText(Long.toString(expenseToEdit.getId()));
         cost.setText(expenseToEdit.getCost());
         title.setText(expenseToEdit.getTitle());
-        date.setText(expenseToEdit.getDate());
+        Calendar cal = Common.getCalendarFromUnixTimestamp(expenseToEdit.getDate());
+        Common.setDateOnDatePicker(date, cal);
+        
+        
         category.setText(expenseToEdit.getCategory());
         subcategory.setText(expenseToEdit.getSubCategory());
         
@@ -68,13 +77,13 @@ public class EditExpense extends Activity {
 		if(view.getId() == R.id.save){
 			EditText title = (EditText)findViewById(R.id.txt_title);
 			EditText cost = (EditText)findViewById(R.id.txt_cost);
-			EditText date = (EditText)findViewById(R.id.txt_date);
+			DatePicker date = (DatePicker)findViewById(R.id.dp_editExpenseDate);
 			EditText category = (EditText)findViewById(R.id.txt_category);
 			EditText subCategory = (EditText)findViewById(R.id.txt_sub_category);
 			
 			String strTitle = title.getText().toString();
 			String strCost = cost.getText().toString();
-			String strDate = date.getText().toString();
+			String strDate = Common.getUnixTimestampFromDatepicker(date);
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();			
 			
@@ -95,6 +104,35 @@ public class EditExpense extends Activity {
 			}
 		}
     		
+    }
+    
+    
+    public void delete(View view){
+    	EditText id = (EditText )findViewById(R.id.hidden_id);
+    	Toast.makeText(this, "deleting... "+ id.getText(), Toast.LENGTH_LONG).show();
+    	
+    	if(view.getId() == R.id.delete){
+			
+			
+						
+			
+			
+			try{
+			datasource.deleteExpense(id.getText().toString());			
+			
+
+			
+			Toast.makeText(this, "deleted "+ id.getText() + " !!! ", Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this, MainActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				getAlertDialogError().show();
+			}
+		}
+    	
     }
     ////xml onClick handler ////
     
@@ -127,7 +165,7 @@ public class EditExpense extends Activity {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setMessage(addedExpense.getTitle() + " - " + 
 				   addedExpense.getCost() + " - " + 
-				   addedExpense.getDate())
+				   Common.getReadableStringFromUnixTimestamp(addedExpense.getDate()))
 		.setTitle("Updated");
 		builder.setPositiveButton(R.string.viewAll, new DialogInterface.OnClickListener() {				
 			@Override

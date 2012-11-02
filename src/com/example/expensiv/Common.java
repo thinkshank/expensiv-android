@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.Toast;
 
 public class Common {
@@ -44,8 +46,13 @@ public class Common {
 		return getCalendarFromUnixTimestamp(Long.valueOf(timestamp));
 	}
 	
+	public static String getReadableStringFromUnixTimestamp(String timestamp){
+		Calendar cal = getCalendarFromUnixTimestamp(Long.valueOf(timestamp));
+		return new SimpleDateFormat(Const.DAY_DATE_MONTH).format(cal.getTime()) ;
+	}
+	
 
-	public static String datepickerToUnixTimestamp(DatePicker datepicker){
+	public static String getUnixTimestampFromDatepicker(DatePicker datepicker){
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, datepicker.getYear());
@@ -58,18 +65,10 @@ public class Common {
 		
 		return Long.valueOf(cal.getTimeInMillis()).toString();
 	}
+	
+	
+	
     
-	public static String getDateCompatible(String dateString){
-		if(dateString.contains("/")){
-			return dateString;
-						
-		}else{
-			return (new SimpleDateFormat("E, dd-MMM").format(Common.getCalendarFromUnixTimestamp(dateString).getTime()));
-		}
-			
-	}
-	
-	
 	public static Calendar getFirstDayOfThisMonth(){
 		// current month
 		return getFirstDayOfMonth(Calendar.getInstance().get(Calendar.MONTH));
@@ -134,5 +133,37 @@ public class Common {
 		}
 		
 	}
+
+	public static String getDateCompatible(String dateString){
+		if(dateString.contains("/")){
+			return dateString;
+						
+		}else{
+			return (new SimpleDateFormat(Const.DAY_DATE_MONTH).format(getCalendarFromUnixTimestamp(dateString).getTime()));
+		}
+			
+	}
+
+	public static void setCurrentDateOnDatePicker(DatePicker datepicker) {
+		
+		setDateOnDatePicker(datepicker,  Calendar.getInstance());
+		
+	}
 	
+	public static void setDateOnDatePicker(DatePicker datepicker, Calendar cal) {
+		
+		
+		int day = cal.get(Calendar.DATE);
+		int month = cal.get(Calendar.MONTH);
+		int year = cal.get(Calendar.YEAR);
+		datepicker.init(year, month, day, new OnDateChangedListener() {
+	
+			@Override
+			public void onDateChanged(DatePicker view, int year,
+					int monthOfYear, int dayOfMonth) {
+				Log.d("shashank", view.getDayOfMonth() + "/" + view.getMonth()
+						+ "/" + view.getYear());
+			}
+		});
+	}
 }

@@ -1,5 +1,6 @@
 package com.example.expensiv;
 
+
 public class Const {
 	
 	public static final int SWIPE_MIN_DISTANCE = 120;
@@ -11,6 +12,7 @@ public class Const {
     public static final int SWIPE_RIGHT_LEFT = 2;
     public static final int SWIPE_UP_DOWN = 3;
     public static final int SWIPE_DOWN_UP = 4;
-	
+
+    public static final String DAY_DATE_MONTH = "E, dd-MMM";
 
 }

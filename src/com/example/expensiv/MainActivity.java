@@ -108,12 +108,14 @@ public class MainActivity extends Activity {
     public void prev(View view) {
     	Intent intent = new Intent(this, MainActivity.class);
     	intent.putExtra("forMonth", "" + (month-1));
+    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	startActivity(intent);    	
 	}
     
     public void next(View view) {
     	Intent intent = new Intent(this, MainActivity.class);
     	intent.putExtra("forMonth", "" + (month+1));
+    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	startActivity(intent);    	
 	}    
     
