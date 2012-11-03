@@ -5,47 +5,87 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.example.expensiv.CategoryDetails.MyGestureDetector;
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
+import com.example.expensiv.shared.Const;
+import com.example.expensiv.shared.Intents;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.sax.RootElement;
 import android.telephony.SmsManager;
+import android.text.Layout;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
+	private static final String EXTRA_FOR_MONTH = Const.EXTRA_FOR_MONTH;
+	private static final String EXTRA_SET_MONTH = Const.EXTRA_SET_MONTH;
+		
 	String [] myStringArray = {"asdfasd","asdfasdf","qwetrqwerqwe"};
 	private ExpensesDatasource datasource;
 	private int month = Calendar.getInstance().get(Calendar.MONTH);
+	  
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        if(getIntent().hasExtra("forMonth")){
-        	month = Integer.parseInt(getIntent().getStringExtra("forMonth"));
+        
+        
+        
+        if(getIntent().hasExtra(EXTRA_FOR_MONTH)){
+        	month = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_MONTH));
+        	if(month>12){
+        		month = 0;
+        	}
+        	else if(month<0){
+        		month = 12;
+        	}
         }
+        
+        Log.e("shahsank", "month : " + month);
         
         datasource = new ExpensesDatasource(this);
         datasource.open();
         
         datasource.updateDateFormat();
         
-        List<Expenses> values = datasource.getAllExpensesForMonth(month);
+        List<Expenses> values = null; 
+        
+        if(month==12){
+        	values = datasource.getAllExpenses();
+        }else{
+        values = datasource.getAllExpensesForMonth(month);
+        }
         
         //final ArrayAdapter<Expenses> adapter = 
         //		new ArrayAdapter<Expenses>(this,
@@ -77,9 +117,43 @@ public class MainActivity extends Activity {
         
         
         TextView totalExpense = (TextView)findViewById(R.id.totalExpense);
-        totalExpense.setText(new SimpleDateFormat("MMM").format(new Date(1970, month,1)));
-        totalExpense.append(" Total Expense - " + datasource.getTotalForMonth(month));
         
+        if(month == 12){
+        	totalExpense.append(" Total Expense - " + datasource.getTotal());
+        }else{
+        	totalExpense.setText(new SimpleDateFormat("MMM").format(new Date(1970, month,1)));
+        	totalExpense.append(" Total Expense - " + datasource.getTotalForMonth(month));	
+        }
+        
+        
+        totalExpense.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//Toast.makeText(MainActivity.this, "show list of months", Toast.LENGTH_LONG).show();
+				getDateDialog().show();
+				
+			}
+		});
+        final GestureDetector gestureDetector = 
+     		   new GestureDetector(new MyGestureDetector());
+        
+        View.OnTouchListener gestureListener = 
+     		   new View.OnTouchListener() {
+ 				
+ 				@Override
+ 				public boolean onTouch(View v, MotionEvent event) {
+ 					if(gestureDetector.onTouchEvent(event)){ 						
+ 						return true;
+ 					}
+ 					return false;
+ 				}
+ 			};
+ 			listview.setOnTouchListener(gestureListener);
+ 			listview.getRootView().setOnTouchListener(gestureListener);
+ 			
+ 			
+ 			
         //sendSMS("TD-12345", String message)
         
     }
@@ -101,31 +175,36 @@ public class MainActivity extends Activity {
     
     //// xml onClick handlers ////
     public void addNewExpense(View view) {
-    	Intent intent = new Intent(this, AddNewExpense.class);
+    	Intent intent = Intents.AddNewExpense(this);
+    	if (month!=12){
+    		intent.putExtra(EXTRA_SET_MONTH, ""+month);
+    	}
+    	else{
+    		intent.putExtra(EXTRA_SET_MONTH, ""+ Calendar.getInstance().get(Calendar.MONTH));
+    	}
+    	
     	startActivity(intent);    	
 	}
     
     public void prev(View view) {
-    	Intent intent = new Intent(this, MainActivity.class);
-    	intent.putExtra("forMonth", "" + (month-1));
-    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	Intent intent = Intents.MainActivity(this);
+    	intent.putExtra(EXTRA_FOR_MONTH, "" + (month-1));
     	startActivity(intent);    	
 	}
     
     public void next(View view) {
-    	Intent intent = new Intent(this, MainActivity.class);
-    	intent.putExtra("forMonth", "" + (month+1));
-    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	Intent intent = Intents.MainActivity(this);
+    	intent.putExtra(EXTRA_FOR_MONTH, "" + (month+1));
     	startActivity(intent);    	
 	}    
     
     public void addNewExpenseBySms(View view){
-    	Intent intent = new Intent(this, ReadSmsSenders.class);
+    	Intent intent = Intents.ReadSmsSenders(this);
     	startActivity(intent);
     }
     
     public void viewCategoryWise(View view){
-    	Intent intent = new Intent(this, CategoryDetails.class);
+    	Intent intent = Intents.CategoryDetails(this);
     	startActivity(intent);
     }
     ////xml onClick handlers ////
@@ -136,7 +215,9 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+        
     }
+    
     ////related to menu ////
     
     
@@ -160,17 +241,17 @@ public class MainActivity extends Activity {
     }
     
     public void addNewExpense(MenuItem menuItem) {
-    	Intent intent = new Intent(this, AddNewExpense.class);
+    	Intent intent = Intents.AddNewExpense(this);
     	startActivity(intent);    	
 	}
     
     public void showCategoryWise(MenuItem menuItem) {
-    	Intent intent = new Intent(this, CategoryDetails.class);
+    	Intent intent = Intents.CategoryDetails(this);
     	startActivity(intent);    	
 	}
     
     public void showReadSms(MenuItem menuItem) {
-    	Intent intent = new Intent(this, ReadSmsSenders.class);
+    	Intent intent = Intents.ReadSmsSenders(this);
     	startActivity(intent);    	
 	}   
     //// xml onClick handlers for menus ////
@@ -178,7 +259,7 @@ public class MainActivity extends Activity {
     
     //// helper methods ////
     public void openExpenseForEdit(Expenses expense) {
-    	Intent intent = new Intent(this, EditExpense.class);
+    	Intent intent = Intents.EditExpense(this);
     	intent.putExtra("expense_id", expense.getId());
     	startActivity(intent);    	
 	}
@@ -247,6 +328,112 @@ public class MainActivity extends Activity {
         
     }
     
-    //// helper methods ////
+        
+    //// swipe
+    
+    class MyGestureDetector extends GestureDetector.SimpleOnGestureListener{
+    
+        
+    	MyGestureDetector() {
+    
+    	}
+
+    	private static final int SWIPE_MIN_DISTANCE = 50;
+        private static final int SWIPE_MAX_OFF_PATH = 250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 50;
+        
+    	@Override
+    	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+    			float velocityY) {
+    		Log.e("shashank", e1.getX() + ", " + e1.getY() + " : " +e2.getX() + ", " + e2.getY() );
+    		// ignore swipe thats too 'vertical'
+    		if(Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH ){
+    			Toast.makeText(MainActivity.this, "youre off path vertically",  Toast.LENGTH_LONG).show();
+    			return false;
+    		}
+    		if(Math.abs(velocityX) <SWIPE_THRESHOLD_VELOCITY){
+    			//Toast.makeText(MainActivity.this, "too slow", Toast.LENGTH_LONG).show();
+    			return false;
+    		}
+    		
+    		// right to left swipe
+    		if(Math.abs(e1.getX() - e2.getX()) > SWIPE_MIN_DISTANCE ) {
+    			
+    			if(e1.getX() > e2.getX()){
+    				// right to left 
+    				Toast.makeText(MainActivity.this, "Loading next month...", Toast.LENGTH_SHORT).show();
+    				next(null);
+    				return true;
+    				}
+    			else{
+    				// left to right
+    				Toast.makeText(MainActivity.this, "Loading last month...", Toast.LENGTH_SHORT).show();
+    				prev(null);
+    				
+    				return true;
+    			}
+    		}
+    		
+    		
+    		
+    		return false;
+    	}
+    }
+    
+    
+    //// date picker dialog
+    private DatePickerDialog getDatePickerDialog(){
+    	DatePickerDialog datePickerDialog = new DatePickerDialog(this, new OnDateSetListener() {
+    		
+    		@Override
+    		public void onDateSet(DatePicker view, int year, int monthOfYear,
+    				int dayOfMonth) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+    	}, 2012, 11, 12);
+    	
+    	return datePickerDialog;
+    	
+    }
+    
+    ////date dialog with month list
+    private AlertDialog getDateDialog(){
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	builder.setTitle("Select month");
+    	final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
+    	
+    	builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
+			
+			
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				//Toast.makeText(MainActivity.this, months[which], Toast.LENGTH_LONG).show();
+				Intent intent = Intents.MainActivity(MainActivity.this);
+				intent.putExtra(EXTRA_FOR_MONTH, ""+which);
+				startActivity(intent);
+				
+			}
+		});
+    	
+    	/*builder.setItems(months, new DialogInterface.OnClickListener() {
+			
+			
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				//Toast.makeText(MainActivity.this, months[which], Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(MainActivity.this, MainActivity.class);
+				intent.putExtra("forMonth", ""+which);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				
+			}
+		});*/
+    	return builder.create();
+    	
+    			
+    }
+    
+        
     
 }

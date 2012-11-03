@@ -3,7 +3,7 @@ package com.example.expensiv.db;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.example.expensiv.Common;
+import com.example.expensiv.shared.Common;
 
 public class Sms {
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
+import com.example.expensiv.shared.Common;
 
 public class EditExpense extends Activity {
 	

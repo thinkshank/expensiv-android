@@ -1,6 +1,8 @@
 package com.example.expensiv;
 
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,9 +20,15 @@ import android.widget.Toast;
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
+import com.example.expensiv.shared.Common;
+import com.example.expensiv.shared.Const;
+import com.example.expensiv.shared.Intents;
 
 public class AddNewExpense extends Activity {
 
+	private static final String EXTRA_MSG_ID = Const.EXTRA_MSG_ID;
+	private static final String EXTRA_SET_MONTH = Const.EXTRA_SET_MONTH;
+	private static final String EXTRA_FOR_MONTH = Const.EXTRA_FOR_MONTH;
 	private ExpensesDatasource datasource;
 	EditText title ; //= (EditText) findViewById(R.id.txt_title);
 	EditText cost ; //= (EditText) findViewById(R.id.txt_cost);
@@ -28,6 +36,7 @@ public class AddNewExpense extends Activity {
 	EditText category ; //= (EditText) findViewById(R.id.txt_category);
 	EditText subCategory ; //= (EditText) findViewById(R.id.txt_sub_category);
 	String msg_id = null;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +49,8 @@ public class AddNewExpense extends Activity {
 		initFieldsById();
 		
 		Intent intent = this.getIntent();
-		if (intent != null && intent.hasExtra("msg_id")) {			
-			String msg_id = intent.getExtras().getString("msg_id");
+		if (intent != null && intent.hasExtra(EXTRA_MSG_ID)) {			
+			String msg_id = intent.getExtras().getString(EXTRA_MSG_ID);
 			
 			if (msg_id != null && msg_id.length() > 0) {
 				this.msg_id = msg_id;
@@ -55,7 +64,15 @@ public class AddNewExpense extends Activity {
 		}		
 
 		DatePicker datepicker = (DatePicker) findViewById(R.id.dp_expenseDate);
-		Common.setCurrentDateOnDatePicker(datepicker);
+		if(intent.hasExtra(EXTRA_SET_MONTH)){
+			int monthToSet = Integer.parseInt(intent.getStringExtra(EXTRA_SET_MONTH));
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.MONTH, monthToSet);
+			Common.setDateOnDatePicker(datepicker, cal);
+		}else{
+			Common.setCurrentDateOnDatePicker(datepicker);
+		}
+		
 		
 
 	}
@@ -149,7 +166,7 @@ public class AddNewExpense extends Activity {
 	}
 
 	public void showViewAll(MenuItem menuitem) {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = Intents.MainActivity(this);
 		startActivity(intent);
 	}
 
@@ -161,14 +178,16 @@ public class AddNewExpense extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(
 				addedExpense.getTitle() + " - " + addedExpense.getCost()
-						+ " - " + addedExpense.getDate()).setTitle("Added");
+						+ " - " + Common.getReadableStringFromUnixTimestamp(addedExpense.getDate())).setTitle("Added");
+		final int forMonth = Common.getCalendarFromUnixTimestamp(addedExpense.getDate()).get(Calendar.MONTH);
+				
 		builder.setPositiveButton(R.string.viewAll,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// user clicked ADD MORE
-						Intent intent = new Intent(AddNewExpense.this,
-								MainActivity.class);
+						Intent intent = Intents.MainActivity(AddNewExpense.this);
+						intent.putExtra(EXTRA_FOR_MONTH, ""+forMonth);
 						startActivity(intent);
 						finish();
 					}
@@ -178,8 +197,7 @@ public class AddNewExpense extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// user clicked ADD MORE
-						Intent intent = new Intent(AddNewExpense.this,
-								AddNewExpense.class);
+						Intent intent = Intents.AddNewExpense(AddNewExpense.this);
 						startActivity(intent);
 						finish();
 					}

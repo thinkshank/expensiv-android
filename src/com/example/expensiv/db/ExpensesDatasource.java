@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.example.expensiv.Common;
+import com.example.expensiv.shared.Common;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -140,7 +140,7 @@ public class ExpensesDatasource {
 									   null,
 									   null,
 									   null,
-									   null);
+									   MySqlLiteHelper.EXPENSES_DATE + " desc ");
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
 			Expenses expense = cursorToExpense(cursor);

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import com.example.expensiv.db.Sms;
+import com.example.expensiv.shared.Common;
 
 import android.app.Activity;
 import android.content.Intent;

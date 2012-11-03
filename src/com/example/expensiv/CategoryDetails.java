@@ -7,6 +7,7 @@ import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesCategoryWise;
 import com.example.expensiv.db.ExpensesDatasource;
 import com.example.expensiv.db.ExpensesSubCategoryWise;
+import com.example.expensiv.shared.Intents;
 
 
 import android.os.Bundle;
@@ -59,7 +60,7 @@ public class CategoryDetails extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long arg3) {
 				
-				Toast.makeText(CategoryDetails.this, "Swipe from Left To Right on a selection for details", Toast.LENGTH_LONG).show();
+				//Toast.makeText(CategoryDetails.this, "Swipe from Left To Right on a selection for details", Toast.LENGTH_LONG).show();
 				String category = ((ExpensesCategoryWise)adapter.getItem(position)).getCategory(); 
 				Intent intent = new Intent(CategoryDetails.this, SubCategoryDetails.class);				
 				intent.putExtra("category", category);
@@ -132,7 +133,7 @@ public class CategoryDetails extends Activity {
 	}
     
     public void showViewAll(MenuItem menuitem){
-    	Intent intent = new Intent(this, MainActivity.class);
+    	Intent intent = Intents.MainActivity(this);
     	Calendar cal = Calendar.getInstance();
     	cal.add(Calendar.MONTH, -1);
     	intent.putExtra("forMonth", ""+cal.get(Calendar.MONTH));

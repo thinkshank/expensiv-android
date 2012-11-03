@@ -1,6 +1,6 @@
 package com.example.expensiv.db;
 
-import com.example.expensiv.Common;
+import com.example.expensiv.shared.Common;
 
 public class Expenses {
 	
