@@ -169,7 +169,10 @@ public class ExpensesDatasource {
 									   null,
 									   null,
 									   null,
-									   null);
+									   MySqlLiteHelper.EXPENSES_DATE + " desc");
+		
+		Log.e("shashank", "getAllExpensesForMonth returned rows : " + cursor.getCount());
+		
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
 			Expenses expense = cursorToExpense(cursor);
@@ -233,6 +236,18 @@ public class ExpensesDatasource {
 		return categoryWiseExpenses;
 	}
 	
+	public ArrayList<String>getDistinctCategories(){
+		
+		Cursor cursor = database.rawQuery("SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES , null);
+		cursor.moveToFirst();
+		ArrayList<String> categories = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			categories.add(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		return categories;
+	}
 	
 	public ArrayList<ExpensesSubCategoryWise> getTotalSubCategoryWise(String category){
 		String sql = " select " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY+"," + 

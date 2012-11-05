@@ -39,4 +39,9 @@ public class Intents {
 		Intent intent = new Intent(caller, EditExpense.class);
     	return intent;		
 	}
+	
+	public static Intent DateWidgets1(Context caller ){
+		Intent intent = new Intent(caller, DateWidgets1.class);
+    	return intent;		
+	}
 }

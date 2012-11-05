@@ -15,28 +15,32 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int ListView1=0x7f07000c;
-        public static final int ListViewCategory=0x7f070006;
-        public static final int buttonAddExpense=0x7f07000d;
-        public static final int buttonAddFromSMS=0x7f07000e;
-        public static final int buttonCategoryWise=0x7f07000f;
-        public static final int delete=0x7f070009;
-        public static final int dp_editExpenseDate=0x7f070008;
+        public static final int ListView1=0x7f07000e;
+        public static final int ListViewCategory=0x7f070007;
+        public static final int auto_category=0x7f070005;
+        public static final int buttonAddExpense=0x7f07000f;
+        public static final int buttonAddFromSMS=0x7f070010;
+        public static final int buttonCategoryWise=0x7f070011;
+        public static final int currentMonth=0x7f07000c;
+        public static final int dateDisplay=0x7f070014;
+        public static final int delete=0x7f07000a;
+        public static final int dp_editExpenseDate=0x7f070009;
         public static final int dp_expenseDate=0x7f070002;
-        public static final int hidden_id=0x7f070007;
-        public static final int menu_add=0x7f070016;
-        public static final int menu_category_wise=0x7f070017;
-        public static final int menu_read_sms=0x7f070018;
-        public static final int menu_settings=0x7f070019;
-        public static final int menu_viewAll=0x7f070015;
-        public static final int part_cost=0x7f070012;
-        public static final int part_details=0x7f070014;
-        public static final int part_title_date=0x7f070013;
-        public static final int rootLayout=0x7f07000a;
-        public static final int save=0x7f070005;
-        public static final int smsList=0x7f070011;
-        public static final int smsSummary=0x7f070010;
-        public static final int totalExpense=0x7f07000b;
+        public static final int hidden_id=0x7f070008;
+        public static final int menu_add=0x7f07001a;
+        public static final int menu_category_wise=0x7f07001b;
+        public static final int menu_read_sms=0x7f07001c;
+        public static final int menu_settings=0x7f07001d;
+        public static final int menu_viewAll=0x7f070019;
+        public static final int part_cost=0x7f070016;
+        public static final int part_details=0x7f070018;
+        public static final int part_header=0x7f070015;
+        public static final int part_title_date=0x7f070017;
+        public static final int rootLayout=0x7f07000b;
+        public static final int save=0x7f070006;
+        public static final int smsList=0x7f070013;
+        public static final int smsSummary=0x7f070012;
+        public static final int totalExpense=0x7f07000d;
         public static final int txt_category=0x7f070003;
         public static final int txt_cost=0x7f070000;
         public static final int txt_sub_category=0x7f070004;
@@ -50,7 +54,8 @@ public final class R {
         public static final int activity_read_sms=0x7f030004;
         public static final int activity_read_sms_senders=0x7f030005;
         public static final int activity_subcategory_details=0x7f030006;
-        public static final int view_expense_item_row=0x7f030007;
+        public static final int date_widgets_example_1=0x7f030007;
+        public static final int view_expense_item_row=0x7f030008;
     }
     public static final class menu {
         public static final int activity_add_new_expense=0x7f060000;
@@ -62,12 +67,13 @@ public final class R {
     public static final class string {
         public static final int add=0x7f040004;
         public static final int addBySms=0x7f040007;
-        public static final int addMore=0x7f040013;
+        public static final int addMore=0x7f040014;
         public static final int app_name=0x7f040000;
         public static final int category=0x7f040011;
         public static final int category_wise=0x7f04000a;
         public static final int cost=0x7f040010;
         public static final int date=0x7f04000f;
+        public static final int date_widgets_example_dateDisplay_text=0x7f040013;
         public static final int delete=0x7f040009;
         public static final int hello_world=0x7f040001;
         public static final int menu_settings=0x7f040002;
@@ -78,12 +84,12 @@ public final class R {
         public static final int sub_category=0x7f040012;
         public static final int title=0x7f04000e;
         public static final int title_activity_add_new_expense=0x7f04000c;
-        public static final int title_activity_category_details=0x7f040015;
+        public static final int title_activity_category_details=0x7f040016;
         public static final int title_activity_edit_expense=0x7f04000d;
         public static final int title_activity_main=0x7f040003;
-        public static final int title_activity_read_sms=0x7f040017;
-        public static final int title_activity_sub_category_details=0x7f040016;
-        public static final int viewAll=0x7f040014;
+        public static final int title_activity_read_sms=0x7f040018;
+        public static final int title_activity_sub_category_details=0x7f040017;
+        public static final int viewAll=0x7f040015;
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;

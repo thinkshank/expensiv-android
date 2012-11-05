@@ -1,6 +1,7 @@
 package com.example.expensiv;
 
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -11,17 +12,26 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
 import com.example.expensiv.shared.Common;
 import com.example.expensiv.shared.Const;
+import com.example.expensiv.shared.ExpensivError;
 import com.example.expensiv.shared.Intents;
 
 public class AddNewExpense extends Activity {
@@ -33,6 +43,7 @@ public class AddNewExpense extends Activity {
 	EditText title ; //= (EditText) findViewById(R.id.txt_title);
 	EditText cost ; //= (EditText) findViewById(R.id.txt_cost);
 	DatePicker date ; //= (DatePicker) findViewById(R.id.dp_expenseDate);
+	//EditText txtdate; 
 	EditText category ; //= (EditText) findViewById(R.id.txt_category);
 	EditText subCategory ; //= (EditText) findViewById(R.id.txt_sub_category);
 	String msg_id = null;
@@ -73,6 +84,16 @@ public class AddNewExpense extends Activity {
 			Common.setCurrentDateOnDatePicker(datepicker);
 		}
 		
+		populateCatogoryAutoComplete();
+		
+	/*	txtdate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = Intents.DateWidgets1(AddNewExpense.this);
+				startActivityForResult(intent, RESULT_OK);				
+			}
+		});*/
 		
 
 	}
@@ -84,7 +105,7 @@ public class AddNewExpense extends Activity {
 		this.date = (DatePicker) findViewById(R.id.dp_expenseDate);
 		this.category = (EditText) findViewById(R.id.txt_category);
 		this.subCategory = (EditText) findViewById(R.id.txt_sub_category);
-		
+		//this.txtdate = (EditText) findViewById(R.id.txt_date);
 	}
 
 
@@ -134,22 +155,56 @@ public class AddNewExpense extends Activity {
 			String strDate = Common.getUnixTimestampFromDatepicker(date); 
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();
+			
+			ExpensivError error = validate(strTitle, strCost, strDate, strCategory, strSubCategory);
+			if(error!=null){
+				getAlertDialogError(error.getErrorMessage()).show();
+			}else{
+				Log.d("shashank", "saving value " + title.getText().toString());
+				try {
+					Expenses addedExpense =datasource.createExpense(strTitle, strDate, strCost, strCategory, strSubCategory, msg_id);
+					Log.d("shashank", "saved to db");
 
-			Log.d("shashank", "saving value " + title.getText().toString());
-			try {
-				Expenses addedExpense =datasource.createExpense(strTitle, strDate, strCost, strCategory, strSubCategory, msg_id);
-				Log.d("shashank", "saved to db");
+					getAlertDialogOk(addedExpense).show();
 
-				getAlertDialogOk(addedExpense).show();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				getAlertDialogError().show();
+				} catch (Exception e) {
+					e.printStackTrace();
+					getAlertDialogError().show();
+				}
 			}
+
+			
 		}
 
 	}
-
+	
+	private ExpensivError validate(String title, String cost, String date, String category, String subcategory){
+		boolean ok = true;
+		String error = "";
+		if(!Common.has(title) || !Common.has(cost)){
+			error = "Oww.. you missed out on the cost and title.";
+			ok = false;
+			return new ExpensivError(error);
+		}
+		
+		if(!Common.has(category) && !Common.has(subcategory)){
+			error = "You should at least give a category or a sub-category";
+			ok = false;
+			return new ExpensivError(error);
+		}
+		
+		try{
+			double costForValidation = Double.parseDouble(cost);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			error = "Enter only numbers for cost";
+			ok = false;
+			return new ExpensivError(error);
+		}		
+	
+		return null;
+	}
 	// //xml onClick handler ////
 
 	// // xml onClick handler for menus////
@@ -205,12 +260,52 @@ public class AddNewExpense extends Activity {
 		return builder.create();
 	}
 
-	public AlertDialog getAlertDialogError() {
+	public AlertDialog getAlertDialogError(){
+		return getAlertDialogError(null);
+	}
+	
+	public AlertDialog getAlertDialogError(String errormessage) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Error in creating").setTitle("Error");
+		if(Common.has(errormessage)){
+			builder.setMessage(errormessage).setTitle("Error");
+		}else{
+			builder.setMessage("Error in creating").setTitle("Error");	
+		}
+		
 		return builder.create();
 	}
 
 	// /// dialog boxes ////
+	
+	// populate spinner
+	private void populateCatogoryAutoComplete(){
+		AutoCompleteTextView autoCategory = (AutoCompleteTextView)findViewById(R.id.auto_category);		
+		//String[] categories = new String[]{"food", "travel", "shopping"};
+		ArrayList<String> categories = datasource.getDistinctCategories();
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, categories);
+		autoCategory.setAdapter(adapter);
+	}
+	
+	
 
+	  // where we display the selected date and time
+    private TextView mTimeDisplay;
+
+
+   
+
+    private void updateDisplay(int hourOfDay, int minute) {
+        mTimeDisplay.setText(
+                    new StringBuilder()
+                    .append(pad(hourOfDay)).append(":")
+                    .append(pad(minute)));
+    }
+
+    private static String pad(int c) {
+        if (c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
+    }
+	
 }

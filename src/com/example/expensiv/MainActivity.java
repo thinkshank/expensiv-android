@@ -57,10 +57,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        
-        
+        setContentView(R.layout.activity_main);        
         
         if(getIntent().hasExtra(EXTRA_FOR_MONTH)){
         	month = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_MONTH));
@@ -116,13 +113,16 @@ public class MainActivity extends Activity {
         //// handle click on list item ////
         
         
+        TextView currentMonth= (TextView)findViewById(R.id.currentMonth);
+        
         TextView totalExpense = (TextView)findViewById(R.id.totalExpense);
         
         if(month == 12){
-        	totalExpense.append(" Total Expense - " + datasource.getTotal());
+        	currentMonth.setText(" All months ");
+        	totalExpense.setText(" Total Expense - "+datasource.getTotal());
         }else{
-        	totalExpense.setText(new SimpleDateFormat("MMM").format(new Date(1970, month,1)));
-        	totalExpense.append(" Total Expense - " + datasource.getTotalForMonth(month));	
+        	currentMonth.setText(new SimpleDateFormat("MMMM").format(new Date(1970, month,1)));
+        	totalExpense.setText(" Total Expense - " + datasource.getTotalForMonth(month));	
         }
         
         
@@ -158,11 +158,15 @@ public class MainActivity extends Activity {
         
     }
     
+    
+    
     @Override
     protected void onPause() {
     	datasource.close();
     	super.onPause();
     }
+    
+    
     
     @Override
     protected void onResume() {
@@ -173,41 +177,49 @@ public class MainActivity extends Activity {
   
     
     
-    //// xml onClick handlers ////
+    //// xml onClick handler 
     public void addNewExpense(View view) {
     	Intent intent = Intents.AddNewExpense(this);
     	if (month!=12){
-    		intent.putExtra(EXTRA_SET_MONTH, ""+month);
-    	}
+    		intent.putExtra(EXTRA_SET_MONTH, ""+month);}
     	else{
-    		intent.putExtra(EXTRA_SET_MONTH, ""+ Calendar.getInstance().get(Calendar.MONTH));
-    	}
+    		intent.putExtra(EXTRA_SET_MONTH, ""+ Calendar.getInstance().get(Calendar.MONTH));}
     	
     	startActivity(intent);    	
 	}
     
+    
+    
+    ////xml onClick handler
     public void prev(View view) {
     	Intent intent = Intents.MainActivity(this);
     	intent.putExtra(EXTRA_FOR_MONTH, "" + (month-1));
     	startActivity(intent);    	
 	}
     
+    
+    ////xml onClick handler
     public void next(View view) {
     	Intent intent = Intents.MainActivity(this);
     	intent.putExtra(EXTRA_FOR_MONTH, "" + (month+1));
     	startActivity(intent);    	
-	}    
+	}
     
+    
+    ////xml onClick handler
     public void addNewExpenseBySms(View view){
     	Intent intent = Intents.ReadSmsSenders(this);
     	startActivity(intent);
     }
     
+    
+    
+    ////xml onClick handler
     public void viewCategoryWise(View view){
     	Intent intent = Intents.CategoryDetails(this);
     	startActivity(intent);
     }
-    ////xml onClick handlers ////
+    
     
     
     //// related to menu //// 
@@ -218,10 +230,9 @@ public class MainActivity extends Activity {
         
     }
     
-    ////related to menu ////
+        
     
-    
-    //// xml onClick handlers for menus ////
+    //// menu xml onClick handler
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -240,29 +251,39 @@ public class MainActivity extends Activity {
         }
     }
     
+    
+    
+ 
     public void addNewExpense(MenuItem menuItem) {
     	Intent intent = Intents.AddNewExpense(this);
     	startActivity(intent);    	
 	}
+    
+    
     
     public void showCategoryWise(MenuItem menuItem) {
     	Intent intent = Intents.CategoryDetails(this);
     	startActivity(intent);    	
 	}
     
+    
+    
     public void showReadSms(MenuItem menuItem) {
     	Intent intent = Intents.ReadSmsSenders(this);
     	startActivity(intent);    	
 	}   
-    //// xml onClick handlers for menus ////
+       
     
-    
+        
     //// helper methods ////
     public void openExpenseForEdit(Expenses expense) {
     	Intent intent = Intents.EditExpense(this);
     	intent.putExtra("expense_id", expense.getId());
     	startActivity(intent);    	
 	}
+    
+    
+    
     //// not used this one yet ////
     private void sendSMS(String phoneNumber, String message)
     {
@@ -328,9 +349,11 @@ public class MainActivity extends Activity {
         
     }
     
-        
-    //// swipe
     
+    
+    
+    
+    //// swipe
     class MyGestureDetector extends GestureDetector.SimpleOnGestureListener{
     
         
@@ -348,7 +371,7 @@ public class MainActivity extends Activity {
     		Log.e("shashank", e1.getX() + ", " + e1.getY() + " : " +e2.getX() + ", " + e2.getY() );
     		// ignore swipe thats too 'vertical'
     		if(Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH ){
-    			Toast.makeText(MainActivity.this, "youre off path vertically",  Toast.LENGTH_LONG).show();
+    			//Toast.makeText(MainActivity.this, "youre off path vertically",  Toast.LENGTH_LONG).show();
     			return false;
     		}
     		if(Math.abs(velocityX) <SWIPE_THRESHOLD_VELOCITY){

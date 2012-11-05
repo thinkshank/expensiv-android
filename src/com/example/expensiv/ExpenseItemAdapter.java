@@ -1,6 +1,7 @@
 package com.example.expensiv;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 public class ExpenseItemAdapter extends ArrayAdapter 
 {
+	
 
 	Context context;
 	List data;
@@ -28,7 +30,6 @@ public class ExpenseItemAdapter extends ArrayAdapter
 	public ExpenseItemAdapter(Context context,  List data) {
 		super(context,R.layout.view_expense_item_row, data);
 		this.context = context;
-		
 		this.data = data;
 		
 	}
@@ -38,18 +39,44 @@ public class ExpenseItemAdapter extends ArrayAdapter
 		// TODO Auto-generated method stub
 		
 		LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-		Log.e("shashank", "inflater  - "+inflater);
+		//Log.e("shashank", "inflater  - "+inflater);
 		View row  = inflater.inflate(R.layout.view_expense_item_row, parent, false);
 		Log.e("shashank", ""+row);
 		
 		TextView cost = (TextView)row.findViewById(R.id.part_cost);
 		TextView titleDate = (TextView)row.findViewById(R.id.part_title_date);
 		TextView details = (TextView)row.findViewById(R.id.part_details);
+		TextView header = (TextView)row.findViewById(R.id.part_header);
 		
 		Expenses expense = (Expenses)this.data.get(position);
 		cost.setText(expense.getCost());
-		titleDate.setText(expense.getTitle() + " - " + Common.getDateCompatible(expense.getDate()));
+		//titleDate.setText(expense.getTitle() + " - " + Common.getDateCompatible(expense.getDate()));
+		titleDate.setText(expense.getTitle());
 		details.setText(expense.getCategory() + " > " + expense.getSubCategory());
+		
+		Calendar cal = Common.getCalendarFromUnixTimestamp(expense.getDate());
+		
+		Expenses lastExpense = null;
+		Calendar lastcal = null;
+		if(position>0){
+			lastExpense = (Expenses)this.data.get(position-1);
+			lastcal = Common.getCalendarFromUnixTimestamp(lastExpense.getDate());}
+				
+		int currentDate = cal.get(Calendar.DAY_OF_MONTH);
+		
+		int lastdate = 0;
+		if(lastcal!=null)
+			{lastdate = lastcal.get(Calendar.DAY_OF_MONTH);}
+		
+		Log.e("shashank", "currentdate"+currentDate);
+		Log.e("shashank", "lastdate"+lastdate);
+		
+		if(currentDate!=lastdate){
+			header.setText(Common.getDateCompatible(expense.getDate()));
+			
+			}
+		else{
+			header.setVisibility(View.GONE);}
 			 	
 		return row;
 		
