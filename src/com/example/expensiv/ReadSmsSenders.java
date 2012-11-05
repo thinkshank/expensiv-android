@@ -74,7 +74,11 @@ public class ReadSmsSenders extends Activity {
         			//msg += " - " + ExpensivConstants.getBankHashMap().get(from);
         			sender.setName(ExpensivConstants.getBankHashMap().get(from));
         		}
-        		senders.add(sender);
+        		
+        		if(from.length()<10){
+        			senders.add(sender);	
+        		}
+        		
         		Log.e("shashank", sender.toString());
         	}        	
         }
