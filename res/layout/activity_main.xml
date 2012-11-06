@@ -11,15 +11,47 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp" >
 
-        <TextView
-            android:id="@+id/currentMonth"
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="1dp"
-            android:paddingTop="5dp"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-        
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/btnLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="@null"
+                android:contentDescription="@string/prev"
+                android:onClick="prev"
+                android:paddingBottom="1dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/arrow_left" />
+
+            <TextView
+                android:id="@+id/currentMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingBottom="1dp"
+                android:paddingTop="5dp"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:contentDescription="@string/next"
+                android:onClick="next"
+                android:paddingBottom="1dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/totalExpense"
             android:layout_width="fill_parent"
@@ -98,7 +130,7 @@
                 android:onClick="next"
                 android:text="@string/next" />
           
-        </LinearLayout>
+        </LinearLayout>
         -->
 
     </LinearLayout>

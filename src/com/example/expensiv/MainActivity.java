@@ -131,10 +131,23 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				//Toast.makeText(MainActivity.this, "show list of months", Toast.LENGTH_LONG).show();
-				getDateDialog().show();
+				getChooseMonthDialog().show();
 				
 			}
 		});
+        
+        
+        currentMonth.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//Toast.makeText(MainActivity.this, "show list of months", Toast.LENGTH_LONG).show();
+				getChooseMonthDialog().show();
+				
+			}
+		});
+        
+        
         final GestureDetector gestureDetector = 
      		   new GestureDetector(new MyGestureDetector());
         
@@ -421,7 +434,7 @@ public class MainActivity extends Activity {
     }
     
     ////date dialog with month list
-    private AlertDialog getDateDialog(){
+    private AlertDialog getChooseMonthDialog(){
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setTitle("Select month");
     	final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
