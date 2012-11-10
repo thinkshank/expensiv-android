@@ -397,13 +397,13 @@ public class MainActivity extends Activity {
     			
     			if(e1.getX() > e2.getX()){
     				// right to left 
-    				Toast.makeText(MainActivity.this, "Loading next month...", Toast.LENGTH_SHORT).show();
+    				//Toast.makeText(MainActivity.this, "Loading next month...", Toast.LENGTH_SHORT).show();
     				next(null);
     				return true;
     				}
     			else{
     				// left to right
-    				Toast.makeText(MainActivity.this, "Loading last month...", Toast.LENGTH_SHORT).show();
+    				//Toast.makeText(MainActivity.this, "Loading last month...", Toast.LENGTH_SHORT).show();
     				prev(null);
     				
     				return true;

@@ -3,6 +3,9 @@ package com.example.expensiv;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -121,6 +124,15 @@ public class AddNewExpense extends Activity {
         	title .setText(smsBody);
         	String smsSender = cursor.getString(cursor.getColumnIndex("address"));
         	category.setText(smsSender);
+        	
+        	
+            String costFromMsg = SmsParser.getCostFromMsg(smsBody);
+            if(costFromMsg!=null && costFromMsg.length()>0){
+            	
+        		cost.setText(costFromMsg);
+    		}
+    		
+    		
         }
         
         

@@ -18,5 +18,14 @@ public class Const {
     public static final String EXTRA_FOR_MONTH = "forMonth";
 	public static final String EXTRA_MSG_ID = "msg_id";
 	public static final String EXTRA_SET_MONTH = "setMonth";
+	
+	 // \s represents whitespace
+    // \d represents digit
+    public static final String PATTERN_INR_DIGITS = "[Ii][Nn][Rr]\\s*.\\s*[\\d.,]+";
+    public static final String PATTERN_RS_DIGITS = "[Rr][Ss]\\s*.\\s*[\\d.,]+";
+    public static final String PATTERN_INR_RS = "(" + PATTERN_INR_DIGITS + "|" + PATTERN_RS_DIGITS + ")";
+    public static final String PATTERN_NON_DIGITS_OR_DOT = "[^0-9.]";
+    public static final String PATTERN_DIGITS_OR_DOT_ONLY = "[0-9.]+";
+    public static final String PATTERN_TRAILING_DOT = "(^\\.)|(\\.$)";
 
 }
