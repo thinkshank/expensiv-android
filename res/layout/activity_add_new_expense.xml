@@ -1,73 +1,76 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:layout_height="fill_parent" >
 
-    <EditText
-        android:id="@+id/txt_cost"
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/cost"
-        android:inputType="number" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
 
-    <EditText
-        android:id="@+id/txt_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/title" />
+        <EditText
+            android:id="@+id/txt_cost"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/cost"
+            android:inputType="number" />
 
-    <!--
+        <EditText
+            android:id="@+id/txt_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title" />
+
+        <!--
          <EditText
         android:id="@+id/txt_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/date" />
-    -->
+        -->
 
+        <DatePicker
+            android:id="@+id/dp_expenseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <DatePicker
-        android:id="@+id/dp_expenseDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <!--
+        <!--
          <EditText
         android:id="@+id/txt_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/date" />
-    -->
+        -->
 
-    <EditText
-        android:id="@+id/txt_category"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/category" />
+        <EditText
+            android:id="@+id/txt_category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/category" />
 
-    <EditText
-        android:id="@+id/txt_sub_category"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/sub_category" />
+        <EditText
+            android:id="@+id/txt_sub_category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/sub_category" />
 
-    <AutoCompleteTextView
-        android:id="@+id/auto_category"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        <AutoCompleteTextView
+            android:id="@+id/auto_category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
 
-    <!--
+        <!--
          <EditText
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="top"
         android:hint="@string/date" />
-    -->
+        -->
 
 
-    <!--
+        <!--
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -86,14 +89,15 @@
             android:paddingLeft="4dip"
             android:text="@string/date_widgets_example_dateDisplay_text" />
     </LinearLayout>
-    -->
+        -->
 
-    <Button
-        android:id="@+id/save"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="saveToDB"
-        android:text="@string/add" />
+        <Button
+            android:id="@+id/save"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="saveToDB"
+            android:text="@string/add" />
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
