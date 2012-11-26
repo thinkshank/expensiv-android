@@ -1,5 +1,6 @@
 package com.example.expensiv.db;
 
+
 import com.example.expensiv.shared.Common;
 
 public class Expenses {
@@ -11,6 +12,7 @@ public class Expenses {
 	private String category;
 	private String subCategory;
 	private String msg_id;
+	private String debitCredit;
 	
 	public long getId() {
 		return id;
@@ -55,6 +57,12 @@ public class Expenses {
 		this.msg_id = msg_id;
 	}
 	
+	public String getDebitCredit() {
+		return debitCredit;
+	}
+	public void setDebitCredit(String _debitCredit) {
+		this.debitCredit = _debitCredit;
+	}
 	@Override
 	public String toString() {
 	return(title + " - " + cost + " - " + (date.length()>9?Common.getCalendarFromUnixTimestamp(date):date) + "\n" + category + " - " + subCategory);

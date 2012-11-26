@@ -11,17 +11,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
 import com.example.expensiv.shared.Common;
+import com.example.expensiv.shared.Intents;
 
 public class EditExpense extends Activity {
 	
 	private ExpensesDatasource datasource;
+	Spinner debitcredit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +45,23 @@ public class EditExpense extends Activity {
         DatePicker date = (DatePicker)findViewById(R.id.dp_editExpenseDate);
         EditText category = (EditText )findViewById(R.id.txt_category);
         EditText subcategory = (EditText )findViewById(R.id.txt_sub_category);
+        debitcredit = (Spinner)findViewById(R.id.edit_debitcredit);
+        
+        
         id.setText(Long.toString(expenseToEdit.getId()));
         cost.setText(expenseToEdit.getCost());
         title.setText(expenseToEdit.getTitle());
         Calendar cal = Common.getCalendarFromUnixTimestamp(expenseToEdit.getDate());
         Common.setDateOnDatePicker(date, cal);
-        
-        
         category.setText(expenseToEdit.getCategory());
         subcategory.setText(expenseToEdit.getSubCategory());
+        Log.e("shashank","debitcredit" + expenseToEdit.getDebitCredit());
         
+        ArrayAdapter<CharSequence> adapterDebitCredit = new ArrayAdapter<CharSequence>(
+				this, android.R.layout.simple_spinner_item, new String[] {
+						"Debit", "Credit" });
+		debitcredit.setAdapter(adapterDebitCredit);
+		debitcredit.setSelection(adapterDebitCredit.getPosition(Common.debitCreditFromCD(expenseToEdit.getDebitCredit())));        
     }
 
     @Override
@@ -86,14 +97,15 @@ public class EditExpense extends Activity {
 			String strCost = cost.getText().toString();
 			String strDate = Common.getUnixTimestampFromDatepicker(date);
 			String strCategory = category.getText().toString();
-			String strSubCategory = subCategory.getText().toString();			
+			String strSubCategory = subCategory.getText().toString();
+			String strDebitCredit = Common.debitCreditToCD(debitcredit.getSelectedItem().toString());
 			
 			Log.d("shashank", "saving value " + title.getText().toString() );
 			try{
 			//datasource.createExpense(title.getText().toString());
 			long id = getIntent().getExtras().getLong("expense_id");
 			
-			Expenses addedExpense = datasource.updateExpense(id, strTitle, strDate, strCost, strCategory, strSubCategory);
+			Expenses addedExpense = datasource.updateExpense(id, strTitle, strDate, strCost, strCategory, strSubCategory,strDebitCredit);
 			Log.d("shashank", "saved to db");
 			
 			getAlertDialogOk(addedExpense).show();
@@ -124,7 +136,7 @@ public class EditExpense extends Activity {
 
 			
 			Toast.makeText(this, "deleted "+ id.getText() + " !!! ", Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(this, MainActivity.class);
+			Intent intent = Intents.MainActivity(this);//new Intent(this, MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			}
@@ -153,7 +165,7 @@ public class EditExpense extends Activity {
     }
     
     public void showViewAll(MenuItem menuitem){
-    	Intent intent = new Intent(this, MainActivity.class);
+    	Intent intent = Intents.MainActivity(this);//new Intent(this, MainActivity.class);
     	startActivity(intent);
     }
     //// xml onClick handler for menus////

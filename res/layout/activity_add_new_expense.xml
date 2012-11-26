@@ -14,7 +14,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/cost"
-            android:inputType="number" />
+            android:inputType="number" 
+            />
 
         <EditText
             android:id="@+id/txt_title"
@@ -55,10 +56,65 @@
             android:layout_height="wrap_content"
             android:hint="@string/sub_category" />
 
-        <AutoCompleteTextView
+        <Spinner
+            android:id="@+id/debitcredit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!--
+             <AutoCompleteTextView
             android:id="@+id/auto_category"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+        -->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+
+            <TextView
+                android:id="@+id/PendingExpenseTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/radio1"
+                android:layout_toRightOf="@+id/radio1"
+                android:text="@string/pendingExpense" />
+
+            <LinearLayout
+                android:id="@+id/pending"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/radio1"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <Spinner
+                    android:id="@+id/spinner1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/contactName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="add from contacts"
+                    android:inputType="none" />
+
+                <!--
+                     <AutoCompleteTextView
+                    android:id="@+id/contactName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+                -->
+            </LinearLayout>
+        </RelativeLayout>
 
         <!--
          <EditText

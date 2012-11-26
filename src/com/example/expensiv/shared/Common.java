@@ -166,4 +166,14 @@ public class Common {
 			}
 		});
 	}
+	
+	public static String debitCreditToCD(String dropdowntext)
+	{
+		return "Credit".equals(dropdowntext)?"C":"D";
+	}
+	
+	public static String debitCreditFromCD(String singlechar)
+	{
+		return "C".equals(singlechar)?"Credit":"Debit";
+	}
 }

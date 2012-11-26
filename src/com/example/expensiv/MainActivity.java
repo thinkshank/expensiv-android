@@ -119,10 +119,21 @@ public class MainActivity extends Activity {
         
         if(month == 12){
         	currentMonth.setText(" All months ");
-        	totalExpense.setText(" Total Expense - "+datasource.getTotal());
+        	double debits = datasource.getTotalDebits();
+        	double credits = datasource.getTotalCredits();
+        	
+        	totalExpense.setText(" Debits - "+ debits);
+        	totalExpense.append(" | Credits - "+ credits);
+        	//totalExpense.append(" | Total - "+ (credits - debits));
         }else{
         	currentMonth.setText(new SimpleDateFormat("MMMM").format(new Date(1970, month,1)));
-        	totalExpense.setText(" Total Expense - " + datasource.getTotalForMonth(month));	
+        	double debits = datasource.getTotalDebitsForMonth(month);
+        	double credits = datasource.getTotalCreditsForMonth(month);
+        	
+        	totalExpense.setText(" Debits - "+ debits);
+        	totalExpense.append(" | Credits - "+ credits);
+        	//totalExpense.append(" | Total - "+ (credits - debits));
+        		
         }
         
         

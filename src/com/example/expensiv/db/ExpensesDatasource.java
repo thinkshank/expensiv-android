@@ -26,8 +26,9 @@ public class ExpensesDatasource {
 		MySqlLiteHelper.EXPENSES_COST,
 		MySqlLiteHelper.EXPENSES_TITLE,
 		MySqlLiteHelper.EXPENSES_CATEGORY,
-		MySqlLiteHelper.EXPENSES_SUB_CATEGORY,		
-		MySqlLiteHelper.EXPENSES_MSG_ID
+		MySqlLiteHelper.EXPENSES_SUB_CATEGORY,
+		MySqlLiteHelper.EXPENSES_DEBIT_CREDIT,
+		MySqlLiteHelper.EXPENSES_MSG_ID		
 		};
 	
 	public ExpensesDatasource(Context context){
@@ -36,6 +37,7 @@ public class ExpensesDatasource {
 	
 	public void open() throws SQLException{
 		database = dbhelper.getWritableDatabase();
+		Log.w("shashank", "db file location : "  + database.getPath());
 	}
 	
 	public void close(){
@@ -43,7 +45,7 @@ public class ExpensesDatasource {
 	}
 	
 	
-	public Expenses createExpense(String title, String date, String cost, String category, String subCategory, String msg_id ){
+	public Expenses createExpense(String title, String date, String cost, String category, String subCategory, String msg_id, String debitcredit ){
 		ContentValues values = new ContentValues();
 		//values.put(MySqlLiteHelper.COL_ID, "NULL");
 		values.put(MySqlLiteHelper.EXPENSES_TITLE, has(title)?title:"");
@@ -52,6 +54,7 @@ public class ExpensesDatasource {
 		values.put(MySqlLiteHelper.EXPENSES_COST, has(cost)?cost:"0");
 		values.put(MySqlLiteHelper.EXPENSES_SUB_CATEGORY, has(subCategory)?subCategory:"");
 		values.put(MySqlLiteHelper.EXPENSES_CATEGORY, has(category)?category:"");
+		values.put(MySqlLiteHelper.EXPENSES_DEBIT_CREDIT, has(debitcredit)?debitcredit:"D");
 		if(has(msg_id)){
 			values.put(MySqlLiteHelper.EXPENSES_MSG_ID, msg_id);
 		}
@@ -76,7 +79,7 @@ public class ExpensesDatasource {
 		return expense;
 	}
 	
-	public Expenses updateExpense(long id, String title, String date, String cost, String category, String subCategory){
+	public Expenses updateExpense(long id, String title, String date, String cost, String category, String subCategory, String debitcredit){
 		ContentValues values = new ContentValues();
 		//values.put(MySqlLiteHelper.COL_ID, "NULL");
 		values.put(MySqlLiteHelper.EXPENSES_TITLE, has(title)?title:"");
@@ -84,6 +87,14 @@ public class ExpensesDatasource {
 		values.put(MySqlLiteHelper.EXPENSES_COST, has(cost)?cost:"0");
 		values.put(MySqlLiteHelper.EXPENSES_SUB_CATEGORY, has(subCategory)?subCategory:"");
 		values.put(MySqlLiteHelper.EXPENSES_CATEGORY, has(category)?category:"");
+		
+		if(has(debitcredit)){
+			if(debitcredit.length() > 1){
+				debitcredit=Common.debitCreditToCD(debitcredit);
+			}
+			values.put(MySqlLiteHelper.EXPENSES_DEBIT_CREDIT, debitcredit);
+		}
+		
 		long insertId;
 		
 			insertId = database.update(MySqlLiteHelper.TABLE_EXPENSES, values, MySqlLiteHelper.EXPENSES_ID + " = " + id, null);
@@ -128,6 +139,7 @@ public class ExpensesDatasource {
 		expense.setCost(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_COST)));
 		expense.setDate(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_DATE)));
 		expense.setMsg_id(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_MSG_ID)));
+		expense.setDebitCredit(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_DEBIT_CREDIT)));
 		return expense;
 	}
 	
@@ -197,18 +209,34 @@ public class ExpensesDatasource {
 		return cursorToExpense(cursor);
 	}
 	
-	public long getTotal(){
-		Cursor cursor = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES, null);
-		cursor.moveToFirst();
-		return cursor.getLong(0);
+	public long getTotalDebits(){
+		Cursor cursorDebits = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " WHERE " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'D';" , null);
+		cursorDebits.moveToFirst();
+		return cursorDebits.getLong(0);		
 	}
 	
-	public long getTotalForMonth(int month){
+	public long getTotalCredits(){
+		Cursor cursorCredits = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " WHERE " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'C';" , null);
+		cursorCredits.moveToFirst();
+		return cursorCredits.getLong(0);		
+	}
+	
+	public long getTotalDebitsForMonth(int month){
 		
 		Calendar from = Common.getFirstDayOfMonth(month);
 		Calendar to = Common.getLastDayOfMonth(month);
 		
-		Cursor cursor = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " where " + MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() , null);
+		Cursor cursor = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " where " + MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'D';", null);
+		cursor.moveToFirst();
+		return cursor.getLong(0);
+	}
+	
+	public long getTotalCreditsForMonth(int month){
+		
+		Calendar from = Common.getFirstDayOfMonth(month);
+		Calendar to = Common.getLastDayOfMonth(month);
+		
+		Cursor cursor = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " where " + MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() + " AND " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'C';", null);
 		cursor.moveToFirst();
 		return cursor.getLong(0);
 	}

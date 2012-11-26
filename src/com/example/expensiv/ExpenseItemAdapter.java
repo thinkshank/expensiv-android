@@ -9,6 +9,7 @@ import com.example.expensiv.shared.Common;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.provider.ContactsContract.Contacts.Data;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +47,10 @@ public class ExpenseItemAdapter extends ArrayAdapter {
 
 		Expenses expense = (Expenses) this.data.get(position);
 		cost.setText(expense.getCost());
+		Log.e("shashank", expense.getCost() +" debcred - " + expense.getDebitCredit());
+		if("C".equals(expense.getDebitCredit())){
+			cost.setTextColor(Color.parseColor("#00BB3F"));
+		}
 		// titleDate.setText(expense.getTitle() + " - " +
 		// Common.getDateCompatible(expense.getDate()));
 		titleDate.setText(expense.getTitle());

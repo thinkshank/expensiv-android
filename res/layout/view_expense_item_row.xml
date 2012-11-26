@@ -4,58 +4,87 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!-- separator -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:orientation="vertical" >
 
+        <!-- date in separator -->
+        
+        <!-- style="?android:attr/listSeparatorTextViewStyle"  -->
         <TextView
             android:id="@+id/part_header"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginTop="1dp"
             android:textSize="10dp" >
         </TextView>
+        <!-- date in separator -->
     </LinearLayout>
+    <!-- separator -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:orientation="horizontal" >
 
+        <!-- cost -->
+
         <TextView
             android:id="@+id/part_cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:layout_marginRight="11dp"
-            android:textSize="20dp" >
+            android:textSize="25dp" 
+            android:textColor="#990033"
+            android:textStyle="bold">
         </TextView>
+        <!-- cost -->
+
+
+        <!-- details block -->
 
         <LinearLayout
+            android:id="@+id/details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/part_cost"
+			android:layout_alignParentLeft="true"
+            android:layout_gravity="left"
             android:orientation="vertical" >
+
+            <!-- row 1 -->
 
             <TextView
                 android:id="@+id/part_title_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp" >
+                android:layout_margin="2dp"
+                android:textColor="#660000" >
             </TextView>
+            <!-- row 1 -->
+
+
+            <!-- row 2 -->
 
             <TextView
                 android:id="@+id/part_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp" >
+                android:layout_margin="2dp" 
+                android:textColor="#003455">
             </TextView>
+            <!-- row 1 -->
         </LinearLayout>
-    </LinearLayout>
+        <!-- details block -->
+    </RelativeLayout>
 
 </LinearLayout>
