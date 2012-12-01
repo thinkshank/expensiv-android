@@ -10,16 +10,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp" >
+        android:paddingRight="16dp" >
     -->
 
     <RelativeLayout
         android:id="@+id/navbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" 
-        android:layout_alignParentTop="true">
+        android:orientation="horizontal" >
 
         <ImageButton
             android:id="@+id/btnLeft"
@@ -60,32 +60,31 @@
         android:id="@+id/totalExpense"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/navbar"
+        android:layout_centerHorizontal="true"
         android:paddingBottom="5dp"
         android:paddingTop="1dp"
         android:textSize="15dp"
-        android:textStyle="bold" 
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/navbar"/>
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/ListView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"        
-        android:layout_below="@+id/totalExpense"
         android:layout_above="@+id/buttonbar"
-        >
+        android:layout_below="@+id/totalExpense"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
     </ListView>
 
     <LinearLayout
         android:id="@+id/buttonbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/bg_office"
         android:gravity="center"
-        android:orientation="horizontal" 
-        android:layout_alignParentBottom="true">
+        android:orientation="horizontal" >
 
         <!--
                  <Button
@@ -95,7 +94,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/button_2_normal"
                 android:onClick="addNewExpense"
-                android:text="@string/addIncome" />
+                android:text="@string/addIncome" />
         -->
 
 
@@ -107,7 +106,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/button_2_normal"
                 android:onClick="addNewExpenseBySms"
-                android:text="@string/addBySms" />
+                android:text="@string/addBySms" />
         -->
 
         <ImageButton
@@ -127,7 +126,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/button_2_normal"
                 android:onClick="addNewExpense"
-                android:text="@string/addExpense" />
+                android:text="@string/addExpense" />
         -->
 
         <ImageButton
@@ -149,7 +148,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/button_2_normal"
                 android:onClick="viewCategoryWise"
-                android:text="@string/category_wise" />
+                android:text="@string/category_wise" />
         -->
 
         <ImageButton

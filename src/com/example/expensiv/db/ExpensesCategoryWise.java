@@ -1,27 +1,42 @@
 package com.example.expensiv.db;
 
-public class ExpensesCategoryWise extends Expenses {
+public class ExpensesCategoryWise {
 
 	private String Category;
-	private String CategorySum;
+	private String Debits; 	// if any
+	private String Credits; 	// if any
+	private String Type; 		// D for debits and C for credits
+
 	public String getCategory() {
 		return Category;
 	}
+
 	public void setCategory(String category) {
 		Category = category;
 	}
-	public String getCategorySum() {
-		return CategorySum;
+
+	public String getDebits() {
+		return Debits;
 	}
-	public void setCategorySum(String categorySum) {
-		CategorySum = categorySum;
+
+	public void setDebits(String debits) {
+		Debits = debits;
 	}
-	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return(Category + " - " + CategorySum);
+
+	public String getCredits() {
+		return Credits;
 	}
-	
+
+	public void setCredits(String credits) {
+		Credits = credits;
+	}
+
+	public String getType() {
+		return Type;
+	}
+
+	public void setType(String type) {
+		Type = type;
+	}	
 
 }

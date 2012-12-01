@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <!-- details block -->
+
+
+    <!-- row 1 -->
+
+    <TextView
+        android:id="@+id/part_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:textColor="#660000" >
+    </TextView>
+    <!-- row 1 -->
+
+
+    <!-- row 2 -->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!-- debits and credits-->
+
+        <TextView
+            android:id="@+id/part_debits_credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="11dp"
+            android:textColor="#990033"
+            android:textSize="25dp" >
+        </TextView>
+
+        <!-- debits and credits-->
+
+
+        <!-- credits 
+
+        <TextView
+            android:id="@+id/part_credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="#990033"
+            android:textSize="20dp" >
+        </TextView>
+        credits -->
+    </RelativeLayout>
+    <!-- row 1 -->
+
+
+    <!-- details block -->
+
+</LinearLayout>

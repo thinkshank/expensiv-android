@@ -5,16 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.example.expensiv.CategoryDetails.MyGestureDetector;
-import com.example.expensiv.db.Expenses;
-import com.example.expensiv.db.ExpensesDatasource;
-import com.example.expensiv.shared.Const;
-import com.example.expensiv.shared.Intents;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.PendingIntent;
@@ -23,9 +15,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.sax.RootElement;
+import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -35,22 +26,28 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.expensiv.db.Expenses;
+import com.example.expensiv.db.ExpensesDatasource;
+import com.example.expensiv.shared.Const;
+import com.example.expensiv.shared.Intents;
 
 public class MainActivity extends Activity {
 	
 	private static final String EXTRA_FOR_MONTH = Const.EXTRA_FOR_MONTH;
 	private static final String EXTRA_SET_MONTH = Const.EXTRA_SET_MONTH;
-		
+	
+	private static final String EXTRA_FOR_YEAR = Const.EXTRA_FOR_YEAR;
+	private static final String EXTRA_SET_YEAR = Const.EXTRA_SET_YEAR;
+			
 	String [] myStringArray = {"asdfasd","asdfasdf","qwetrqwerqwe"};
 	private ExpensesDatasource datasource;
 	private int month = Calendar.getInstance().get(Calendar.MONTH);
+	private int year = Calendar.getInstance().get(Calendar.YEAR);
 	  
 	
 	
@@ -59,17 +56,28 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);        
         
-        if(getIntent().hasExtra(EXTRA_FOR_MONTH)){
-        	month = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_MONTH));
-        	if(month>12){
-        		month = 0;
-        	}
-        	else if(month<0){
-        		month = 12;
-        	}
+        if(getIntent().hasExtra(EXTRA_FOR_YEAR)){
+        	year = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_YEAR));
         }
         
-        Log.e("shahsank", "month : " + month);
+        if(getIntent().hasExtra(EXTRA_FOR_MONTH)){
+        	month = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_MONTH));        	
+        }
+     /*   // swipe right on "all months"
+    	if(month>12){
+    		month = 0;
+    		year = year + 1 ;
+    	}
+    	
+    	// swipe left on "all months"
+    	else if(month<0){
+    		month = 12;
+    		year = year - 1 ;
+    	}*/
+       
+        
+        Log.e("shashank", "month : " + month);
+        Log.e("shashank", "year: " + year);
         
         datasource = new ExpensesDatasource(this);
         datasource.open();
@@ -81,7 +89,7 @@ public class MainActivity extends Activity {
         if(month==12){
         	values = datasource.getAllExpenses();
         }else{
-        values = datasource.getAllExpensesForMonth(month);
+        values = datasource.getAllExpensesForMonth(month, year);
         }
         
         //final ArrayAdapter<Expenses> adapter = 
@@ -120,18 +128,20 @@ public class MainActivity extends Activity {
         if(month == 12){
         	currentMonth.setText(" All months ");
         	double debits = datasource.getTotalDebits();
-        	double credits = datasource.getTotalCredits();
-        	
+        	double credits = datasource.getTotalCredits();        	
         	totalExpense.setText(" Debits - "+ debits);
         	totalExpense.append(" | Credits - "+ credits);
-        	//totalExpense.append(" | Total - "+ (credits - debits));
+        	if((credits - debits) >= 0.0)
+        	{totalExpense.append(" | Balance - "+ (credits - debits));}        	
         }else{
-        	currentMonth.setText(new SimpleDateFormat("MMMM").format(new Date(1970, month,1)));
-        	double debits = datasource.getTotalDebitsForMonth(month);
-        	double credits = datasource.getTotalCreditsForMonth(month);
+        	currentMonth.setText(new SimpleDateFormat("MMMM-yy").format(new Date(year, month,1)));
+        	double debits = datasource.getTotalDebitsForMonth(month,year);
+        	double credits = datasource.getTotalCreditsForMonth(month,year);
         	
         	totalExpense.setText(" Debits - "+ debits);
         	totalExpense.append(" | Credits - "+ credits);
+        	if((credits - debits) >= 0.0)
+        	{totalExpense.append(" | Balance - "+ (credits - debits));}
         	//totalExpense.append(" | Total - "+ (credits - debits));
         		
         }
@@ -216,16 +226,60 @@ public class MainActivity extends Activity {
     
     ////xml onClick handler
     public void prev(View view) {
+    	int prevMonth;
+    	int prevYear;
     	Intent intent = Intents.MainActivity(this);
-    	intent.putExtra(EXTRA_FOR_MONTH, "" + (month-1));
-    	startActivity(intent);    	
+    	
+    	// swipe left on "all months" should give "jan" last year
+    	if(month==12){
+    		prevMonth = 11;
+    		prevYear = year - 1 ;
+    		intent.putExtra(EXTRA_FOR_MONTH, "" + (prevMonth));
+    		intent.putExtra(EXTRA_FOR_YEAR, "" + (prevYear));
+    	}
+    	// swipe left on "jan"  shud giv "all months"
+    	else if(month==0){
+    		prevMonth = 12;
+    		intent.putExtra(EXTRA_FOR_MONTH, "" + (prevMonth));
+    		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
+    	}
+    	// swipe left on "feb-dec". prev month of same year
+    	else{
+    		prevMonth = month - 1;
+    		intent.putExtra(EXTRA_FOR_MONTH, "" + (prevMonth));
+    		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
+    	}
+    	
+    	startActivity(intent);
+    	
 	}
     
     
     ////xml onClick handler
     public void next(View view) {
+    	
+    	int nextMonth; 
+    	int nextYear;
     	Intent intent = Intents.MainActivity(this);
-    	intent.putExtra(EXTRA_FOR_MONTH, "" + (month+1));
+    	// swipe right on "all months"
+    	if(month==12){
+    		nextMonth= 0;
+    		nextYear = year + 1 ;
+    		intent.putExtra(EXTRA_FOR_MONTH, "" + (nextMonth));
+    		intent.putExtra(EXTRA_FOR_YEAR, "" + (nextYear));
+    	}
+    	// swipe right on others
+    	// note that swipe right on dec i.e. 11 
+    	// will lead to correct month i.e. 12
+    	else{
+    		nextMonth = month + 1;
+    		intent.putExtra(EXTRA_FOR_MONTH, "" + (nextMonth));
+    		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
+    	}
+    	
+    	
+    	
+    	
     	startActivity(intent);    	
 	}
     

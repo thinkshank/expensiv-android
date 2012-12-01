@@ -70,13 +70,14 @@ public class Common {
 	
     
 	public static Calendar getFirstDayOfThisMonth(){
-		// current month
-		return getFirstDayOfMonth(Calendar.getInstance().get(Calendar.MONTH));
+		// current month and year
+		return getFirstDayOfMonth(Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.YEAR));
 	}
 	
-	public static Calendar getFirstDayOfMonth(int month){
+	public static Calendar getFirstDayOfMonth(int month, int year){
 	
 	Calendar calFrom = Calendar.getInstance();
+	calFrom.set(Calendar.YEAR, year);
 	calFrom.set(Calendar.MONTH, month);
 	calFrom.set(Calendar.DAY_OF_MONTH,1);
 	calFrom.set(Calendar.HOUR_OF_DAY,0);
@@ -87,11 +88,12 @@ public class Common {
 	}
 	
 	public static Calendar getLastDayOfThisMonth(){
-		return getLastDayOfMonth(Calendar.getInstance().get(Calendar.MONTH));
+		return getLastDayOfMonth(Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.YEAR));
 	}
 	
-	public static Calendar getLastDayOfMonth(int month){
+	public static Calendar getLastDayOfMonth(int month, int year){
 	Calendar calTo = Calendar.getInstance();
+	calTo.set(Calendar.YEAR, year);
 	calTo.set(Calendar.MONTH, month);
 	calTo.set(Calendar.DAY_OF_MONTH,1);
 	calTo.set(Calendar.HOUR_OF_DAY,0);

@@ -13,11 +13,14 @@ public class Const {
     public static final int SWIPE_UP_DOWN = 3;
     public static final int SWIPE_DOWN_UP = 4;
 
-    public static final String DAY_DATE_MONTH = "E, dd-MMM";
+    public static final String DAY_DATE_MONTH = "E, dd-MMM-yy";
     
     public static final String EXTRA_FOR_MONTH = "forMonth";
 	public static final String EXTRA_MSG_ID = "msg_id";
 	public static final String EXTRA_SET_MONTH = "setMonth";
+	
+	public static final String EXTRA_FOR_YEAR = "forYear";
+	public static final String EXTRA_SET_YEAR = "setYear";
 	
 	 // \s represents whitespace
     // \d represents digit
