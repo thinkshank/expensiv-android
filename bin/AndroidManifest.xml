@@ -6,9 +6,19 @@
 
 	<uses-permission android:name="android.permission.READ_SMS" />
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+	
 	<!-- android:theme="@style/AppTheme" > -->
 	<application android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name" android:theme="@android:style/Theme.Light">
+		
+	    <receiver android:name=".SMSBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
+            </intent-filter>
+        </receiver>
+        
 		<activity android:name=".MainActivity" android:label="@string/title_activity_main"
 			android:theme="@android:style/Theme.Light">
 			<intent-filter>
