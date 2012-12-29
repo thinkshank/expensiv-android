@@ -44,13 +44,23 @@ public class ExpensesDatasource {
 		dbhelper.close();
 	}
 	
-	
+
+	/**
+	 * @param title
+	 * @param date - unix timestamp. use Common.getUnixTimestampXXX() methods
+	 * @param cost
+	 * @param category
+	 * @param subCategory
+	 * @param msg_id
+	 * @param debitcredit
+	 * @return
+	 */
 	public Expenses createExpense(String title, String date, String cost, String category, String subCategory, String msg_id, String debitcredit ){
 		ContentValues values = new ContentValues();
 		//values.put(MySqlLiteHelper.COL_ID, "NULL");
 		values.put(MySqlLiteHelper.EXPENSES_TITLE, has(title)?title:"");
 		//values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:new SimpleDateFormat("dd/MMM/yyyy").format(new Date()));
-		values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:new SimpleDateFormat("dd/MMM/yyyy").format(new Date()));
+		values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:Common.getUnixTimestampFromCalendar(Calendar.getInstance()));
 		values.put(MySqlLiteHelper.EXPENSES_COST, has(cost)?cost:"0");
 		values.put(MySqlLiteHelper.EXPENSES_SUB_CATEGORY, has(subCategory)?subCategory:"");
 		values.put(MySqlLiteHelper.EXPENSES_CATEGORY, has(category)?category:"");

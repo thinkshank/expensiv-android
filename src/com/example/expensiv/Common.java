@@ -3,6 +3,8 @@ package com.example.expensiv;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.example.expensiv.shared.Const;
+
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MotionEvent;

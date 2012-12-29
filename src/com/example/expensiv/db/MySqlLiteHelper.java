@@ -1,11 +1,16 @@
 package com.example.expensiv.db;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
 public class MySqlLiteHelper extends SQLiteOpenHelper {
@@ -106,6 +111,27 @@ public class MySqlLiteHelper extends SQLiteOpenHelper {
 			
 		}
 
+	}
+	
+	
+	public static String DB_FILEPATH = //"/data/data/{package_name}/databases/database.db";
+			Environment.getExternalStorageDirectory().toString() + "/expensiv/";
+	
+	public boolean importDatabase(String dbPath) throws IOException {
+
+	    // Close the SQLiteOpenHelper so it will commit the created empty
+	    // database to internal storage.
+	    close();
+	    File newDb = new File(dbPath);
+	    File oldDb = new File(DB_FILEPATH);
+	    if (newDb.exists()) {
+	        FileUtils.copyFile(new FileInputStream(newDb), new FileOutputStream(oldDb));
+	        // Access the copied database so SQLiteHelper will cache it and mark
+	        // it as created.
+	        getWritableDatabase().close();
+	        return true;
+	    }
+	    return false;
 	}
 
 }

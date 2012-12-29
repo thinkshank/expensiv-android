@@ -1,0 +1,486 @@
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 3cf4e7e..0f4a369 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -8,6 +8,7 @@
+ 	<uses-permission android:name="android.permission.READ_CONTACTS" />
+ 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+ 	<uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
++	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+ 	
+ 	<!-- android:theme="@style/AppTheme" > -->
+ 	<application android:icon="@drawable/ic_launcher"
+@@ -19,6 +20,11 @@
+             </intent-filter>
+         </receiver>
+         
++	    <service
++            android:name=".AutoCreateService"
++            android:label="@string/category" >
++        </service>
++        
+ 		<activity android:name=".MainActivity" android:label="@string/title_activity_main"
+ 			android:theme="@android:style/Theme.Light">
+ 			<intent-filter>
+diff --git a/bin/AndroidManifest.xml b/bin/AndroidManifest.xml
+index 3cf4e7e..0f4a369 100644
+--- a/bin/AndroidManifest.xml
++++ b/bin/AndroidManifest.xml
+@@ -8,6 +8,7 @@
+ 	<uses-permission android:name="android.permission.READ_CONTACTS" />
+ 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+ 	<uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
++	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+ 	
+ 	<!-- android:theme="@style/AppTheme" > -->
+ 	<application android:icon="@drawable/ic_launcher"
+@@ -19,6 +20,11 @@
+             </intent-filter>
+         </receiver>
+         
++	    <service
++            android:name=".AutoCreateService"
++            android:label="@string/category" >
++        </service>
++        
+ 		<activity android:name=".MainActivity" android:label="@string/title_activity_main"
+ 			android:theme="@android:style/Theme.Light">
+ 			<intent-filter>
+diff --git a/bin/classes.dex b/bin/classes.dex
+index f21bfcd..f761f05 100644
+Binary files a/bin/classes.dex and b/bin/classes.dex differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense$1.class b/bin/classes/com/example/expensiv/AddNewExpense$1.class
+index 8dc00a4..7aabc2c 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense$1.class and b/bin/classes/com/example/expensiv/AddNewExpense$1.class differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense$2.class b/bin/classes/com/example/expensiv/AddNewExpense$2.class
+index 962f845..0520c25 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense$2.class and b/bin/classes/com/example/expensiv/AddNewExpense$2.class differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense$3.class b/bin/classes/com/example/expensiv/AddNewExpense$3.class
+index 024c1cc..7dd5801 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense$3.class and b/bin/classes/com/example/expensiv/AddNewExpense$3.class differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense$4.class b/bin/classes/com/example/expensiv/AddNewExpense$4.class
+index aba412b..7dd91a3 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense$4.class and b/bin/classes/com/example/expensiv/AddNewExpense$4.class differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense$5.class b/bin/classes/com/example/expensiv/AddNewExpense$5.class
+index 4b1b5be..fb64862 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense$5.class and b/bin/classes/com/example/expensiv/AddNewExpense$5.class differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense$6.class b/bin/classes/com/example/expensiv/AddNewExpense$6.class
+index 00f15ba..98022a5 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense$6.class and b/bin/classes/com/example/expensiv/AddNewExpense$6.class differ
+diff --git a/bin/classes/com/example/expensiv/AddNewExpense.class b/bin/classes/com/example/expensiv/AddNewExpense.class
+index ae8269f..9ffd4d8 100644
+Binary files a/bin/classes/com/example/expensiv/AddNewExpense.class and b/bin/classes/com/example/expensiv/AddNewExpense.class differ
+diff --git a/bin/classes/com/example/expensiv/CategoryDetails$MyGestureDetector.class b/bin/classes/com/example/expensiv/CategoryDetails$MyGestureDetector.class
+deleted file mode 100644
+index 7d86aa5..0000000
+Binary files a/bin/classes/com/example/expensiv/CategoryDetails$MyGestureDetector.class and /dev/null differ
+diff --git a/bin/classes/com/example/expensiv/Common$1.class b/bin/classes/com/example/expensiv/Common$1.class
+index 5c6b3b1..a2566da 100644
+Binary files a/bin/classes/com/example/expensiv/Common$1.class and b/bin/classes/com/example/expensiv/Common$1.class differ
+diff --git a/bin/classes/com/example/expensiv/Common.class b/bin/classes/com/example/expensiv/Common.class
+index 6f7aa06..5f108f8 100644
+Binary files a/bin/classes/com/example/expensiv/Common.class and b/bin/classes/com/example/expensiv/Common.class differ
+diff --git a/bin/classes/com/example/expensiv/Const.class b/bin/classes/com/example/expensiv/Const.class
+deleted file mode 100644
+index 99f712c..0000000
+Binary files a/bin/classes/com/example/expensiv/Const.class and /dev/null differ
+diff --git a/bin/classes/com/example/expensiv/R$string.class b/bin/classes/com/example/expensiv/R$string.class
+index bb9a7f5..a1163e8 100644
+Binary files a/bin/classes/com/example/expensiv/R$string.class and b/bin/classes/com/example/expensiv/R$string.class differ
+diff --git a/bin/classes/com/example/expensiv/R$style.class b/bin/classes/com/example/expensiv/R$style.class
+index 32b812c..8b05e30 100644
+Binary files a/bin/classes/com/example/expensiv/R$style.class and b/bin/classes/com/example/expensiv/R$style.class differ
+diff --git a/bin/classes/com/example/expensiv/SMSBroadcastReceiver.class b/bin/classes/com/example/expensiv/SMSBroadcastReceiver.class
+index f0aa376..e6971b8 100644
+Binary files a/bin/classes/com/example/expensiv/SMSBroadcastReceiver.class and b/bin/classes/com/example/expensiv/SMSBroadcastReceiver.class differ
+diff --git a/bin/classes/com/example/expensiv/SmsParser.class b/bin/classes/com/example/expensiv/SmsParser.class
+index 5f6049b..1b4d19d 100644
+Binary files a/bin/classes/com/example/expensiv/SmsParser.class and b/bin/classes/com/example/expensiv/SmsParser.class differ
+diff --git a/bin/classes/com/example/expensiv/db/ExpensesDatasource.class b/bin/classes/com/example/expensiv/db/ExpensesDatasource.class
+index 6eb2644..f147556 100644
+Binary files a/bin/classes/com/example/expensiv/db/ExpensesDatasource.class and b/bin/classes/com/example/expensiv/db/ExpensesDatasource.class differ
+diff --git a/bin/classes/com/example/expensiv/shared/Common$1.class b/bin/classes/com/example/expensiv/shared/Common$1.class
+index 6ee9d3f..5656fea 100644
+Binary files a/bin/classes/com/example/expensiv/shared/Common$1.class and b/bin/classes/com/example/expensiv/shared/Common$1.class differ
+diff --git a/bin/classes/com/example/expensiv/shared/Common.class b/bin/classes/com/example/expensiv/shared/Common.class
+index 11d59c5..5bfa0a5 100644
+Binary files a/bin/classes/com/example/expensiv/shared/Common.class and b/bin/classes/com/example/expensiv/shared/Common.class differ
+diff --git a/bin/classes/com/example/expensiv/shared/Const.class b/bin/classes/com/example/expensiv/shared/Const.class
+index 885ddd8..660c550 100644
+Binary files a/bin/classes/com/example/expensiv/shared/Const.class and b/bin/classes/com/example/expensiv/shared/Const.class differ
+diff --git a/bin/expensiv.apk b/bin/expensiv.apk
+index d0777dc..5157a1c 100644
+Binary files a/bin/expensiv.apk and b/bin/expensiv.apk differ
+diff --git a/bin/resources.ap_ b/bin/resources.ap_
+index bd6f530..07c9089 100644
+Binary files a/bin/resources.ap_ and b/bin/resources.ap_ differ
+diff --git a/gen/com/example/expensiv/R.java b/gen/com/example/expensiv/R.java
+index c15b720..82a1421 100644
+--- a/gen/com/example/expensiv/R.java
++++ b/gen/com/example/expensiv/R.java
+@@ -117,6 +117,7 @@ public final class R {
+         public static final int prev=0x7f040007;
+         public static final int read_sms=0x7f04000d;
+         public static final int save=0x7f04000a;
++        public static final int service=0x7f04001c;
+         public static final int sub_category=0x7f040014;
+         public static final int title=0x7f040010;
+         public static final int title_activity_add_new_expense=0x7f04000e;
+diff --git a/lint.xml b/lint.xml
+index ee0eead..e1ed323 100644
+--- a/lint.xml
++++ b/lint.xml
+@@ -1,3 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <lint>
++    <issue id="NewApi">
++        <ignore path="src\com\example\expensiv\AutoCreateService.java" />
++    </issue>
+ </lint>
+\ No newline at end of file
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 27d314e..6678ac1 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -28,5 +28,6 @@
+     <string name="title_activity_sub_category_details">Sub-Category Details</string>
+     <string name="title_activity_read_sms">ReadSms</string>
+     <string name="pendingExpense">Pending Expense</string>
++    <string name="service">AutoCreateService</string>
+ 
+ </resources>
+\ No newline at end of file
+diff --git a/src/com/example/expensiv/AddNewExpense.java b/src/com/example/expensiv/AddNewExpense.java
+index 1e24755..eb589f1 100644
+--- a/src/com/example/expensiv/AddNewExpense.java
++++ b/src/com/example/expensiv/AddNewExpense.java
+@@ -79,7 +79,44 @@ public class AddNewExpense extends Activity {
+ 		initFieldsById();
+ 
+ 		Intent intent = this.getIntent();
+-		if (intent != null && intent.hasExtra(EXTRA_MSG_ID)) {
++		SmsParser smsparser = new SmsParser();
++		
++		if(intent != null && intent.hasExtra("SMS_BODY"))
++		{
++			String smsbody = intent.getExtras().getString("SMS_BODY");
++			String smssender = intent.getExtras().getString("SMS_SENDER");
++			
++			String senderbank = smsparser.setBank(smssender);
++			if(senderbank!=null){
++				
++				category.setText(senderbank);
++			}else{
++				category.setText(smssender);
++			}
++				
++
++			title.setText(smsbody);
++				
++				
++			String costFromMsg = smsparser.getCostFromMsg(smsbody);
++			if (costFromMsg != null && costFromMsg.length() > 0) {
++
++				cost.setText(costFromMsg);
++			}
++			
++			String categoryFromMsg = smsparser.getCategory(smsbody);
++			if(Common.has(categoryFromMsg)){
++				category.setText(categoryFromMsg);
++			}
++			
++			String subcategoryFromMsg = smsparser.getSubCategory(smsbody);
++			if(Common.has(subcategoryFromMsg)){
++				subCategory.setText(subcategoryFromMsg);
++			}
++				
++		}
++		
++		else if (intent != null && intent.hasExtra(EXTRA_MSG_ID)) {
+ 			String msg_id = intent.getExtras().getString(EXTRA_MSG_ID);
+ 
+ 			if (msg_id != null && msg_id.length() > 0) {
+@@ -286,8 +323,10 @@ public class AddNewExpense extends Activity {
+ 			String smsSender = cursor.getString(cursor
+ 					.getColumnIndex("address"));
+ 			category.setText(smsSender);
+-
+-			String costFromMsg = SmsParser.getCostFromMsg(smsBody);
++			SmsParser smsparser = new SmsParser();
++			smsparser.setBank(smsSender);
++			
++			String costFromMsg = smsparser.getCostFromMsg(smsBody);
+ 			if (costFromMsg != null && costFromMsg.length() > 0) {
+ 
+ 				cost.setText(costFromMsg);
+diff --git a/src/com/example/expensiv/Common.java b/src/com/example/expensiv/Common.java
+index 8511bba..93d1e0f 100644
+--- a/src/com/example/expensiv/Common.java
++++ b/src/com/example/expensiv/Common.java
+@@ -3,6 +3,8 @@ package com.example.expensiv;
+ import java.text.SimpleDateFormat;
+ import java.util.Calendar;
+ 
++import com.example.expensiv.shared.Const;
++
+ import android.text.format.DateFormat;
+ import android.util.Log;
+ import android.view.MotionEvent;
+diff --git a/src/com/example/expensiv/Const.java b/src/com/example/expensiv/Const.java
+deleted file mode 100644
+index 4f0affc..0000000
+--- a/src/com/example/expensiv/Const.java
++++ /dev/null
+@@ -1,18 +0,0 @@
+-package com.example.expensiv;
+-
+-
+-public class Const {
+-	
+-	public static final int SWIPE_MIN_DISTANCE = 120;
+-    public static final int SWIPE_MAX_OFF_PATH = 250;
+-    public static final int SWIPE_THRESHOLD_VELOCITY = 200;
+-    
+-    public static final int SWIPE_ERROR = 0;
+-    public static final int SWIPE_LEFT_RIGHT = 1;
+-    public static final int SWIPE_RIGHT_LEFT = 2;
+-    public static final int SWIPE_UP_DOWN = 3;
+-    public static final int SWIPE_DOWN_UP = 4;
+-
+-    public static final String DAY_DATE_MONTH = "E, dd-MMM";
+-
+-}
+diff --git a/src/com/example/expensiv/SMSBroadcastReceiver.java b/src/com/example/expensiv/SMSBroadcastReceiver.java
+index c6a2f44..5f91def 100644
+--- a/src/com/example/expensiv/SMSBroadcastReceiver.java
++++ b/src/com/example/expensiv/SMSBroadcastReceiver.java
+@@ -1,5 +1,7 @@
+ package com.example.expensiv;
+ 
++import com.example.expensiv.shared.Const;
++
+ import android.content.BroadcastReceiver;
+ import android.content.Context;
+ import android.content.Intent;
+@@ -12,7 +14,8 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
+ 
+         private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+         private static final String TAG = "SMSBroadcastReceiver";
+-
++        
++        
+         @Override
+         public void onReceive(Context context, Intent intent) {
+              Log.i(TAG, "Intent recieved: " + intent.getAction());
+@@ -27,13 +30,24 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
+                         }
+                         if (messages.length > -1) {
+                             Log.i(TAG, "Message recieved: " + messages[0].getMessageBody() );
++                            Log.i(TAG, "Message sender: " + messages[0].getOriginatingAddress());
+                             Log.i(TAG, "Message index ICC: " + messages[0].getIndexOnIcc() );
+                             Log.i(TAG, "Message index SIM : " + messages[0].getIndexOnSim() );
+                             // Toast.makeText(this, "Message recieved" , Toast.LENGTH_LONG).show();
+                             // Intent intent = new Intent(ReadSms.this, AddNewExpense.class);
+-                            Intent i = new Intent(context, AddNewExpense.class);
+-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+-                            context.startActivity(i); 
++                            //Intent i = new Intent(context, AddNewExpense.class);
++                            String sender = messages[0].getOriginatingAddress();
++                            String body   = messages[0].getMessageBody();
++                            
++                            /// if the sender is known, then process it automatically.
++                            if(SmsParser.number_id.containsKey(sender)){
++                            	
++                            	Intent i = new Intent(context, AutoCreateService.class);
++                                //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
++                                i.putExtra(Const.EXTRA_SMS_SENDER, sender);
++                                i.putExtra(Const.EXTRA_SMS_BODY, body);
++                                context.startService(i);
++                            }
+                             
+                         }
+                     }
+diff --git a/src/com/example/expensiv/SmsParser.java b/src/com/example/expensiv/SmsParser.java
+index 4366c99..02bbb04 100644
+--- a/src/com/example/expensiv/SmsParser.java
++++ b/src/com/example/expensiv/SmsParser.java
+@@ -1,32 +1,83 @@
+ package com.example.expensiv;
+ 
++import java.util.HashMap;
+ import java.util.Scanner;
+ 
+ import com.example.expensiv.shared.Const;
+ 
++import android.inputmethodservice.ExtractEditText;
+ import android.util.Log;
+ 
+ public class SmsParser {
+-
+-	public static String getCostFromMsg(String str) {
+-		Scanner scanner = new Scanner(str);
+-		String inr = scanner.findInLine(Const.PATTERN_INR_RS);
+-		if (inr != null && inr.length() > 0) {
+-			Log.e("shashank", " found INR string : " + inr);
+-			//strip all non-digits like . and , e.g. INR40,000.00
+-			inr= inr.replaceAll(Const.PATTERN_NON_DIGITS_OR_DOT, "");
+-			//strip trailing '.'s  e.g. .112.12 that can be returned from Rs. 100.00 
+-			inr= inr.replaceAll(Const.PATTERN_TRAILING_DOT,"");
++	
++	public static HashMap<String, String> id_name = new HashMap<String, String>();
++	public static HashMap<String, String> number_id = new HashMap<String, String>();
++	static{
++		number_id.put("9920979434", "0");
++		id_name.put("0", "SHASHANK");
++		
++		number_id.put("LM-FROMSC", "1");
++		id_name.put("1", "STANDARD-CHARTERED");
++		
++		number_id.put("LM-ICICI", "2");
++		id_name.put("2", "ICICI");
++	}
++	
++	private SmsExtractor extractor;
++	private String bankid; 
++	
++	public SmsParser()
++	{
++			
++	}
++	
++	public String setBank(String senderphone){
++		for(String num : number_id.keySet()){
++			if(num!=null)
++				num.replace(" ", "");
+ 			
+-			Scanner numscanner = new Scanner(inr);
+-			String num = numscanner.findInLine(Const.PATTERN_DIGITS_OR_DOT_ONLY);
+-			Log.e("shashank", "extracted String : " + num);
+-			if (num != null && num.length() > 0) {
+-				double d = Double.valueOf(num);
+-				Log.e("shashank", "Double representation " + d);
+-				return num;
++			if(num.contains(senderphone)){
++				this.bankid = number_id.get(num);
++				this.extractor = SmsExtractor.getExtractor(this.bankid);
++				return id_name.get(this.bankid);
+ 			}
+ 		}
++		
++		return null;
++	}
++	
++	public String getBankName(){
++		if(this.bankid!=null){
++			return id_name.get(this.bankid);
++		}		
+ 		return null;
+ 	}
++	
++	
++	public String getCostFromMsg(String str) {
++		
++		return this.extractor.getCostFromMsg(str);
++	}
++	
++	public String getCategory(String str){
++		return this.extractor.getCategory(str);
++	}
++	
++	public String getSubCategory(String str){
++		return this.extractor.getSubCategory(str);
++	}
++	
++	public String getDate(String str){
++		return this.extractor.getDate(str);
++	}
++	
++	// debit credit withdrawal
++	public String getType(String str){
++		return this.extractor.getType(str);
++	}
++	
++	public String getTitle(String str){
++		return this.extractor.getTitle(str);
++	}
++	
+ }
+diff --git a/src/com/example/expensiv/db/ExpensesDatasource.java b/src/com/example/expensiv/db/ExpensesDatasource.java
+index eced46b..f9776a1 100644
+--- a/src/com/example/expensiv/db/ExpensesDatasource.java
++++ b/src/com/example/expensiv/db/ExpensesDatasource.java
+@@ -50,7 +50,7 @@ public class ExpensesDatasource {
+ 		//values.put(MySqlLiteHelper.COL_ID, "NULL");
+ 		values.put(MySqlLiteHelper.EXPENSES_TITLE, has(title)?title:"");
+ 		//values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:new SimpleDateFormat("dd/MMM/yyyy").format(new Date()));
+-		values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:new SimpleDateFormat("dd/MMM/yyyy").format(new Date()));
++		values.put(MySqlLiteHelper.EXPENSES_DATE, has(date)?date:Common.getUnixTimestampFromCalendar(Calendar.getInstance()));
+ 		values.put(MySqlLiteHelper.EXPENSES_COST, has(cost)?cost:"0");
+ 		values.put(MySqlLiteHelper.EXPENSES_SUB_CATEGORY, has(subCategory)?subCategory:"");
+ 		values.put(MySqlLiteHelper.EXPENSES_CATEGORY, has(category)?category:"");
+diff --git a/src/com/example/expensiv/shared/Common.java b/src/com/example/expensiv/shared/Common.java
+index b0074ff..83fdab4 100644
+--- a/src/com/example/expensiv/shared/Common.java
++++ b/src/com/example/expensiv/shared/Common.java
+@@ -67,6 +67,21 @@ public class Common {
+ 	}
+ 	
+ 	
++	public static String getUnixTimestampFromCalendar(Calendar calendar){
++		
++		Calendar cal = calendar;
++		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
++		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
++		cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
++		cal.set(Calendar.HOUR_OF_DAY, 0);
++		cal.set(Calendar.MINUTE, 0);
++		cal.set(Calendar.SECOND, 0);
++		cal.set(Calendar.MILLISECOND, 0);
++		
++		return Long.valueOf(cal.getTimeInMillis()).toString();
++	}
++	
++	
+ 	
+     
+ 	public static Calendar getFirstDayOfThisMonth(){
+diff --git a/src/com/example/expensiv/shared/Const.java b/src/com/example/expensiv/shared/Const.java
+index 2c4bff3..39475f4 100644
+--- a/src/com/example/expensiv/shared/Const.java
++++ b/src/com/example/expensiv/shared/Const.java
+@@ -3,6 +3,10 @@ package com.example.expensiv.shared;
+ 
+ public class Const {
+ 	
++	public static final String debit = "D";
++	public static final String credit = "C";
++	
++	
+ 	public static final int SWIPE_MIN_DISTANCE = 120;
+     public static final int SWIPE_MAX_OFF_PATH = 250;
+     public static final int SWIPE_THRESHOLD_VELOCITY = 200;
+@@ -22,6 +26,9 @@ public class Const {
+ 	public static final String EXTRA_FOR_YEAR = "forYear";
+ 	public static final String EXTRA_SET_YEAR = "setYear";
+ 	
++	public static final String EXTRA_SMS_SENDER  = "SMS_SENDER";
++    public static final String EXTRA_SMS_BODY = "SMS_BODY";
++	
+ 	 // \s represents whitespace
+     // \d represents digit
+     public static final String PATTERN_INR_DIGITS = "[Ii][Nn][Rr]\\s*.\\s*[\\d.,]+";
+@@ -30,5 +37,14 @@ public class Const {
+     public static final String PATTERN_NON_DIGITS_OR_DOT = "[^0-9.]";
+     public static final String PATTERN_DIGITS_OR_DOT_ONLY = "[0-9.]+";
+     public static final String PATTERN_TRAILING_DOT = "(^\\.)|(\\.$)";
++    
++    public static class StandardChartered{
++    public static final int id = 1;
++    public static final String PATTERN_DATE = "\\d+/\\d+/\\d+";
++    public static final String PATTERN_IS_DEBIT = "(debited)";
++    public static final String PATTERN_IS_CREDIT = "(credited)";
++    public static final String PATTERN_IS_ATM = "(?=ATM)*(?=withdrawal)";
++    
++    }
+ 
+ }

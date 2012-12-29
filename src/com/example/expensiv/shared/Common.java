@@ -2,6 +2,7 @@ package com.example.expensiv.shared;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -66,6 +67,27 @@ public class Common {
 		return Long.valueOf(cal.getTimeInMillis()).toString();
 	}
 	
+	
+	public static String getUnixTimestampFromCalendar(Calendar calendar){
+		
+		Calendar cal = calendar;
+		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+		cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		return Long.valueOf(cal.getTimeInMillis()).toString();
+	}
+	
+	public static String getUnixTimestampFromDateObject(Date date){
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return getUnixTimestampFromCalendar(cal);
+	}
 	
 	
     
@@ -136,7 +158,7 @@ public class Common {
 		
 	}
 
-	public static String getDateCompatible(String dateString){
+	public static String getDateReadable(String dateString){
 		if(dateString.contains("/")){
 			return dateString;
 						

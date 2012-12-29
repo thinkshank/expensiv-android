@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.MailTo;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -99,6 +100,7 @@ public class MainActivity extends Activity {
         
         final ExpenseItemAdapter adapter = 
         		new ExpenseItemAdapter(this,values);
+
         
     	//ArrayAdapter<String> adapter =
     	//new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myStringArray);
@@ -205,10 +207,33 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
     	datasource.open();
+    	
+    	List<Expenses> values = null; 
+        
+        if(month==12){
+        	values = datasource.getAllExpenses();
+        }else{
+        values = datasource.getAllExpensesForMonth(month, year);
+        }
+        
+        //final ArrayAdapter<Expenses> adapter = 
+        //		new ArrayAdapter<Expenses>(this,
+        //								   android.R.layout.simple_list_item_1,
+        //								   values);
+        
+        final ExpenseItemAdapter adapter = 
+        		new ExpenseItemAdapter(this,values);
+
+        
+    	//ArrayAdapter<String> adapter =
+    	//new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myStringArray);
+    	
+        ListView listview = (ListView)findViewById(R.id.ListView1);
+        listview.setAdapter(adapter);
     	super.onResume();
     }
 
-  
+   
     
     
     //// xml onClick handler 

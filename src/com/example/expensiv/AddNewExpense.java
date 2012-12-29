@@ -79,7 +79,44 @@ public class AddNewExpense extends Activity {
 		initFieldsById();
 
 		Intent intent = this.getIntent();
-		if (intent != null && intent.hasExtra(EXTRA_MSG_ID)) {
+		SmsParser smsparser = new SmsParser();
+		
+		if(intent != null && intent.hasExtra("SMS_BODY"))
+		{
+			String smsbody = intent.getExtras().getString("SMS_BODY");
+			String smssender = intent.getExtras().getString("SMS_SENDER");
+			
+			String senderbank = smsparser.setBank(smssender);
+			if(senderbank!=null){
+				
+				category.setText(senderbank);
+			}else{
+				category.setText(smssender);
+			}
+				
+
+			title.setText(smsbody);
+				
+				
+			String costFromMsg = smsparser.getCostFromMsg(smsbody);
+			if (costFromMsg != null && costFromMsg.length() > 0) {
+
+				cost.setText(costFromMsg);
+			}
+			
+			String categoryFromMsg = smsparser.getCategory(smsbody);
+			if(Common.has(categoryFromMsg)){
+				category.setText(categoryFromMsg);
+			}
+			
+			String subcategoryFromMsg = smsparser.getSubCategory(smsbody);
+			if(Common.has(subcategoryFromMsg)){
+				subCategory.setText(subcategoryFromMsg);
+			}
+				
+		}
+		
+		else if (intent != null && intent.hasExtra(EXTRA_MSG_ID)) {
 			String msg_id = intent.getExtras().getString(EXTRA_MSG_ID);
 
 			if (msg_id != null && msg_id.length() > 0) {
@@ -286,8 +323,10 @@ public class AddNewExpense extends Activity {
 			String smsSender = cursor.getString(cursor
 					.getColumnIndex("address"));
 			category.setText(smsSender);
-
-			String costFromMsg = SmsParser.getCostFromMsg(smsBody);
+			SmsParser smsparser = new SmsParser();
+			smsparser.setBank(smsSender);
+			
+			String costFromMsg = smsparser.getCostFromMsg(smsBody);
 			if (costFromMsg != null && costFromMsg.length() > 0) {
 
 				cost.setText(costFromMsg);

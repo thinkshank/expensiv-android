@@ -1,32 +1,83 @@
 package com.example.expensiv;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 import com.example.expensiv.shared.Const;
 
+import android.inputmethodservice.ExtractEditText;
 import android.util.Log;
 
 public class SmsParser {
-
-	public static String getCostFromMsg(String str) {
-		Scanner scanner = new Scanner(str);
-		String inr = scanner.findInLine(Const.PATTERN_INR_RS);
-		if (inr != null && inr.length() > 0) {
-			Log.e("shashank", " found INR string : " + inr);
-			//strip all non-digits like . and , e.g. INR40,000.00
-			inr= inr.replaceAll(Const.PATTERN_NON_DIGITS_OR_DOT, "");
-			//strip trailing '.'s  e.g. .112.12 that can be returned from Rs. 100.00 
-			inr= inr.replaceAll(Const.PATTERN_TRAILING_DOT,"");
+	
+	public static HashMap<String, String> id_name = new HashMap<String, String>();
+	public static HashMap<String, String> number_id = new HashMap<String, String>();
+	static{
+		number_id.put("9920979434", "0");
+		id_name.put("0", "SHASHANK");
+		
+		number_id.put("LM-FROMSC", "1");
+		id_name.put("1", "STANDARD-CHARTERED");
+		
+		number_id.put("LM-ICICI", "2");
+		id_name.put("2", "ICICI");
+	}
+	
+	private SmsExtractor extractor;
+	private String bankid; 
+	
+	public SmsParser()
+	{
 			
-			Scanner numscanner = new Scanner(inr);
-			String num = numscanner.findInLine(Const.PATTERN_DIGITS_OR_DOT_ONLY);
-			Log.e("shashank", "extracted String : " + num);
-			if (num != null && num.length() > 0) {
-				double d = Double.valueOf(num);
-				Log.e("shashank", "Double representation " + d);
-				return num;
+	}
+	
+	public String setBank(String senderphone){
+		for(String num : number_id.keySet()){
+			if(num!=null)
+				num.replace(" ", "");
+			
+			if(senderphone.contains(num)){
+				this.bankid = number_id.get(num);
+				this.extractor = SmsExtractor.getExtractor(this.bankid);
+				return id_name.get(this.bankid);
 			}
 		}
+		
 		return null;
 	}
+	
+	public String getBankName(){
+		if(this.bankid!=null){
+			return id_name.get(this.bankid);
+		}		
+		return null;
+	}
+	
+	
+	public String getCostFromMsg(String str) {
+		
+		return this.extractor.getCostFromMsg(str);
+	}
+	
+	public String getCategory(String str){
+		return this.extractor.getCategory(str);
+	}
+	
+	public String getSubCategory(String str){
+		return this.extractor.getSubCategory(str);
+	}
+	
+	public String getDate(String str){
+		return this.extractor.getDate(str);
+	}
+	
+	// debit credit withdrawal
+	public String getType(String str){
+		return this.extractor.getType(str);
+	}
+	
+	public String getTitle(String str){
+		return this.extractor.getTitle(str);
+	}
+	
 }

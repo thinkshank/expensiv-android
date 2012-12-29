@@ -117,6 +117,7 @@ public final class R {
         public static final int prev=0x7f040007;
         public static final int read_sms=0x7f04000d;
         public static final int save=0x7f04000a;
+        public static final int service=0x7f04001c;
         public static final int sub_category=0x7f040014;
         public static final int title=0x7f040010;
         public static final int title_activity_add_new_expense=0x7f04000e;

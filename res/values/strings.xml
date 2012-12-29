@@ -28,5 +28,6 @@
     <string name="title_activity_sub_category_details">Sub-Category Details</string>
     <string name="title_activity_read_sms">ReadSms</string>
     <string name="pendingExpense">Pending Expense</string>
+    <string name="service">AutoCreateService</string>
 
 </resources>

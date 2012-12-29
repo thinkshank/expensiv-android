@@ -78,7 +78,7 @@ public class ExpenseItemAdapter extends ArrayAdapter {
 		Log.e("shashank", "lastdate" + lastdate);
 
 		if (currentDate != lastdate) {
-			header.setText(Common.getDateCompatible(expense.getDate()));
+			header.setText(Common.getDateReadable(expense.getDate()));
 		} else {
 			header.setVisibility(View.GONE);
 		}
