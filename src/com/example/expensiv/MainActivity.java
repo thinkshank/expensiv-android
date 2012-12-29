@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -108,8 +109,23 @@ public class MainActivity extends Activity {
         ListView listview = (ListView)findViewById(R.id.ListView1);
         listview.setAdapter(adapter);
         
+        //// handle long click on list item ////
+        listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				Expenses expense = (Expenses)adapter.getItem(position);
+				//Toast.makeText(MainActivity.this, "" + position + " - " + expense.getTitle() + " - " + expense.getId(), Toast.LENGTH_LONG).show();
+				openExpenseForEdit(expense);
+				return false;
+			}
+        	
+		});
+        //// handle long click on list item ////
+        
         //// handle click on list item ////
-        listview.setOnItemClickListener(new OnItemClickListener() {
+       /* listview.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position,
@@ -117,9 +133,8 @@ public class MainActivity extends Activity {
 				Expenses expense = (Expenses)adapter.getItem(position);
 				//Toast.makeText(MainActivity.this, "" + position + " - " + expense.getTitle() + " - " + expense.getId(), Toast.LENGTH_LONG).show();
 				openExpenseForEdit(expense);
-			}
-        	
-		});
+			}        	
+		});*/
         //// handle click on list item ////
         
         
@@ -537,8 +552,7 @@ public class MainActivity extends Activity {
 				//Toast.makeText(MainActivity.this, months[which], Toast.LENGTH_LONG).show();
 				Intent intent = Intents.MainActivity(MainActivity.this);
 				intent.putExtra(EXTRA_FOR_MONTH, ""+which);
-				startActivity(intent);
-				
+				startActivity(intent);				
 			}
 		});
     	

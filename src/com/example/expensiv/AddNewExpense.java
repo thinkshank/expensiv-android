@@ -233,6 +233,15 @@ public class AddNewExpense extends Activity {
 			}
 			
 		});
+		
+		
+		category.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				getCategoryChoicesDialog().show();
+			}
+		});
 	}
 
 	private void populateContactList() {/*
@@ -391,7 +400,17 @@ public class AddNewExpense extends Activity {
 		}
 
 	}
-
+	
+	//// xml onClick handler ////
+	public void showCategoryChoices(View view){
+		getCategoryChoicesDialog().show();
+	}
+	
+	//// xml onClick handler ////
+	public void showSubCategoryChoices(View view){
+		getSubCategoryChoicesDialog().show();
+	}
+	
 	private ExpensivError validate(String title, String cost, String date,
 			String category, String subcategory, String debitcredit) {
 		boolean ok = true;
@@ -496,6 +515,54 @@ public class AddNewExpense extends Activity {
 
 		return builder.create();
 	}
+	
+	
+	  private AlertDialog getCategoryChoicesDialog(){
+		  Log.e("shashank", "getChooseCategoryDialog() called");
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setTitle("Select category");
+	    	//final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
+	    		    	
+	    	//builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
+	    	
+	    	final ArrayList<String> categoryChoices = datasource.getDistinctCategories();
+	    	
+	    	final ArrayAdapter<String> adapter =
+	    	new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
+	    	
+	    	builder.setAdapter(adapter, new DialogInterface.OnClickListener() {		
+				
+				public void onClick(DialogInterface dialog, int which) {					
+					setCategoryText(adapter.getItem(which));
+				}
+			});	    	
+	    	
+	    	return builder.create();	    	    			
+	    }
+	  
+	  private AlertDialog getSubCategoryChoicesDialog(){
+		  Log.e("shashank", "getSubCategoryChoicesDialog() called");
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setTitle("Select sub category");
+	    	//final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
+	    		    	
+	    	//builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
+	    	
+	    	final ArrayList<String> categoryChoices = datasource.getDistinctSubCategories();
+	    	
+	    	final ArrayAdapter<String> adapter =
+	    	new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
+	    	
+	    	builder.setAdapter(adapter, new DialogInterface.OnClickListener() {		
+				
+				public void onClick(DialogInterface dialog, int which) {					
+					setCategoryText(adapter.getItem(which));
+				}
+			});	    	
+	    	
+	    	return builder.create();
+	    	    			
+	    }
 
 	// /// dialog boxes ////
 
@@ -523,6 +590,10 @@ public class AddNewExpense extends Activity {
 			return String.valueOf(c);
 		else
 			return "0" + String.valueOf(c);
+	}
+	
+	private void setCategoryText(String textToSet){
+		category.setText(textToSet);
 	}
 
 }

@@ -5,6 +5,7 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Expensiv</string>
     <string name="add">Add</string>
+    <string name="list">…</string>
     <string name="addExpense">Add Expense</string>
     <string name="addIncome">+</string>
     <string name="prev">Previous Month</string>

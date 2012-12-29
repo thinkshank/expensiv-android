@@ -344,6 +344,19 @@ public class ExpensesDatasource {
 		return categories;
 	}
 	
+	public ArrayList<String>getDistinctSubCategories(){
+		
+		Cursor cursor = database.rawQuery("SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES , null);
+		cursor.moveToFirst();
+		ArrayList<String> categories = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			categories.add(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		return categories;
+	}
+	
 	public ArrayList<ExpensesSubCategoryWise> getTotalSubCategoryWise(String category){
 		String sql = " select " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY+"," + 
 					 " sum(" + MySqlLiteHelper.EXPENSES_COST+")" + 
