@@ -113,6 +113,8 @@ public class MySqlLiteHelper extends SQLiteOpenHelper {
 
 	}
 	
+		
+	
 	
 	public static String DB_FILEPATH = //"/data/data/{package_name}/databases/database.db";
 			Environment.getExternalStorageDirectory().toString() + "/expensiv/";
@@ -133,5 +135,7 @@ public class MySqlLiteHelper extends SQLiteOpenHelper {
 	    }
 	    return false;
 	}
+	
+  
 
 }

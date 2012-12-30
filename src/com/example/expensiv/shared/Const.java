@@ -28,6 +28,10 @@ public class Const {
 	
 	public static final String EXTRA_SMS_SENDER  = "SMS_SENDER";
     public static final String EXTRA_SMS_BODY = "SMS_BODY";
+    
+    public static final String BANK_ID_DEFAULT = "0";
+    public static final String BANK_ID_STANC = "1";
+    public static final String BANK_ID_ICICI = "2";
 	
 	 // \s represents whitespace
     // \d represents digit

@@ -11,17 +11,17 @@ import android.util.Log;
 import com.example.expensiv.shared.Common;
 import com.example.expensiv.shared.Const;
 
-public class SmsExtractorStandardChartered extends SmsExtractorDefault {
+public class SmsExtractorICICI extends SmsExtractorDefault {
 
-  	public static final String id = Const.BANK_ID_STANC;
-    public static final String PATTERN_DATE = "\\d+/\\d+/\\d+";
-    public static final String DATE_FORMAT_FOR_PARSING = "dd/MM/yy";
-    public static final String PATTERN_IS_DEBIT = "(?i)debited";
-    public static final String PATTERN_IS_CREDIT = "(?i)credited";
-    public static final String PATTERN_IS_ATM = "(?i)ATM";
-    public static final String PATTERN_IS_WITHDRAWAL ="(?i)withdrawal";
+  	public static final String id = Const.BANK_ID_ICICI;
+	public static final String PATTERN_DATE = "\\d+/\\d+/\\d+";
+	public static final String DATE_FORMAT_FOR_PARSING = "dd/MM/yy";
+	public static final String PATTERN_IS_DEBIT = "(?i)(.debited.|(.card.purchase.))";
+	public static final String PATTERN_IS_CREDIT = "(?i)credited";
+	public static final String PATTERN_IS_ATM = "(?i)ATM";
+	public static final String PATTERN_IS_WITHDRAWAL ="(?i)(withdrawal|wdl)";
 	    
-	public SmsExtractorStandardChartered() {
+	public SmsExtractorICICI() {
 		super(id);
 	}
 

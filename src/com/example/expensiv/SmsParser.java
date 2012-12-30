@@ -19,7 +19,7 @@ public class SmsParser {
 		number_id.put("LM-FROMSC", "1");
 		id_name.put("1", "STANDARD-CHARTERED");
 		
-		number_id.put("LM-ICICI", "2");
+		number_id.put("LM-ICICIB", "2");
 		id_name.put("2", "ICICI");
 	}
 	

@@ -8,13 +8,22 @@ import com.example.expensiv.shared.Const;
 
 public abstract class SmsExtractor{
 	
-	private SmsExtractor extractor;
-
+	
 	public static SmsExtractor getExtractor(String bankid){
-		if(bankid.equals("1")||bankid.equals("0")){
+		
+		if(bankid.equals(Const.BANK_ID_DEFAULT)){
+			Log.e("shashank", "using extractor SmsExtractorStandardChartered");
+			return new SmsExtractorStandardChartered();
+		}		
+		if(bankid.equals(Const.BANK_ID_STANC)){
 			Log.e("shashank", "using extractor SmsExtractorStandardChartered");
 			return new SmsExtractorStandardChartered();
 		}
+		else if(bankid.equals(Const.BANK_ID_ICICI)){
+			Log.e("shashank","using SmsExtractorICICI()");
+			return new SmsExtractorICICI();
+		}
+		
 		Log.e("shashank", "using extractor SmsExtractorDefault");
 		return new SmsExtractorDefault(bankid);
 	}
