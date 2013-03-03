@@ -20,7 +20,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
              Log.i(TAG, "Intent recieved: " + intent.getAction());
 
-                if (intent.getAction() == SMS_RECEIVED) {
+                if (intent.getAction().equalsIgnoreCase(SMS_RECEIVED) ) {
                     Bundle bundle = intent.getExtras();
                     if (bundle != null) {
                         Object[] pdus = (Object[])bundle.get("pdus");

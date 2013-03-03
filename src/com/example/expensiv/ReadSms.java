@@ -68,7 +68,7 @@ public class ReadSms extends Activity {
         									"date as date_raw"};
 		//// make sms list ////
 		Uri Uri_sms = Uri.parse("content://sms/inbox");
-        Cursor cursor2 = managedQuery(Uri_sms, projection, "address = '" + sendernumber + "'", null, null);
+        Cursor cursor2 = managedQuery(Uri_sms, projection, "address = '" + sendernumber + "'", null, " date_raw desc");
         cursor2.moveToFirst();
         
         ArrayList<Sms> msgs = new ArrayList<Sms>();

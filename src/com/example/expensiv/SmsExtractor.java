@@ -13,8 +13,16 @@ public abstract class SmsExtractor{
 		
 		if(bankid.equals(Const.BANK_ID_DEFAULT)){
 			Log.e("shashank", "using extractor SmsExtractorStandardChartered");
+			//return new SmsExtractorStandardChartered();
 			return new SmsExtractorStandardChartered();
+		}
+		
+		if(bankid.equals(Const.BANK_ID_SONYU)){
+			Log.e("shashank", "using extractor SmsExtractorStandardChartered");
+			//return new SmsExtractorStandardChartered();
+			return new SmsExtractorICICI();
 		}		
+		
 		if(bankid.equals(Const.BANK_ID_STANC)){
 			Log.e("shashank", "using extractor SmsExtractorStandardChartered");
 			return new SmsExtractorStandardChartered();

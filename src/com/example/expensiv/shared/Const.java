@@ -3,9 +3,13 @@ package com.example.expensiv.shared;
 
 public class Const {
 	
-	public static final String debit = "D";
-	public static final String credit = "C";
+	public static final String DEBIT = "D";
+	public static final String CREDIT = "C";
+	public static final String WITHDRAW = "W";
 	
+	public static final String DEBIT_TEXT = "Debit";
+	public static final String CREDIT_TEXT = "Credit";
+	public static final String WITHDRAW_TEXT = "Withdraw";
 	
 	public static final int SWIPE_MIN_DISTANCE = 120;
     public static final int SWIPE_MAX_OFF_PATH = 250;
@@ -30,6 +34,7 @@ public class Const {
     public static final String EXTRA_SMS_BODY = "SMS_BODY";
     
     public static final String BANK_ID_DEFAULT = "0";
+    public static final String BANK_ID_SONYU = "001";
     public static final String BANK_ID_STANC = "1";
     public static final String BANK_ID_ICICI = "2";
 	

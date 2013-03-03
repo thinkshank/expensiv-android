@@ -216,7 +216,7 @@ public class AddNewExpenseAuto extends Activity {
 		
 		ArrayAdapter<CharSequence> adapterDebitCredit = new ArrayAdapter<CharSequence>(
 				this, android.R.layout.simple_spinner_item, new String[] {
-						"Debit", "Credit" });
+						Const.DEBIT_TEXT, Const.CREDIT_TEXT, Const.WITHDRAW_TEXT });
 		debitcredit.setAdapter(adapterDebitCredit);
 		debitcredit.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -365,7 +365,7 @@ public class AddNewExpenseAuto extends Activity {
 			String strDate = Common.getUnixTimestampFromDatepicker(date);
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();
-			String strDebitCredit = Common.debitCreditToCD(debitcredit.getSelectedItem().toString());
+			String strDebitCredit = Common.debitCreditToCode(debitcredit.getSelectedItem().toString());
 			Log.e("shashank" , "strDebitCredit - "+ strDebitCredit);
 
 			ExpensivError error = validate(strTitle, strCost, strDate,

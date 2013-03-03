@@ -35,16 +35,21 @@ public class ExpensesDatasource {
 		dbhelper = new MySqlLiteHelper(context);
 	}
 	
+	
+	
 	public void open() throws SQLException{
 		database = dbhelper.getWritableDatabase();
 		Log.w("shashank", "db file location : "  + database.getPath());
 	}
+	
+	
 	
 	public void close(){
 		dbhelper.close();
 	}
 	
 
+	
 	/**
 	 * @param title
 	 * @param date - unix timestamp. use Common.getUnixTimestampXXX() methods
@@ -88,6 +93,8 @@ public class ExpensesDatasource {
 		cursor.close();
 		return expense;
 	}
+		
+	
 	
 	public Expenses updateExpense(long id, String title, String date, String cost, String category, String subCategory, String debitcredit){
 		ContentValues values = new ContentValues();
@@ -100,7 +107,7 @@ public class ExpensesDatasource {
 		
 		if(has(debitcredit)){
 			if(debitcredit.length() > 1){
-				debitcredit=Common.debitCreditToCD(debitcredit);
+				debitcredit=Common.debitCreditToCode(debitcredit);
 			}
 			values.put(MySqlLiteHelper.EXPENSES_DEBIT_CREDIT, debitcredit);
 		}
@@ -124,21 +131,29 @@ public class ExpensesDatasource {
 		return expense;
 	}
 	
+	
+	
 	public void deleteExpense(Expenses expense){
 		long id = expense.getId();
 		System.out.println("Expense with id " + id + " is deleted");
 		deleteExpense(id);
 	}
 	
+	
+	
 	public void deleteExpense(long id){
 		database.delete(MySqlLiteHelper.TABLE_EXPENSES, MySqlLiteHelper.EXPENSES_ID + " = " + id, null);
 	}
+	
+	
 	
 	public void deleteExpense(String str_id){
 		long id = Long.valueOf(str_id);
 		System.out.println("Expense with id " + id + " is deleted");
 		deleteExpense(id);
 	}
+	
+	
 	
 	private Expenses cursorToExpense(Cursor cursor){
 		Expenses expense = new Expenses();
@@ -152,6 +167,8 @@ public class ExpensesDatasource {
 		expense.setDebitCredit(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_DEBIT_CREDIT)));
 		return expense;
 	}
+	
+	
 	
 	public List<Expenses> getAllExpenses(){
 		List<Expenses> expenses = new ArrayList<Expenses>();
@@ -173,6 +190,8 @@ public class ExpensesDatasource {
 		cursor.close();
 		return expenses;
 	}
+	
+	
 	
 	public List<Expenses> getAllExpensesForMonth(int month, int year){
 		List<Expenses> expenses = new ArrayList<Expenses>();
@@ -206,6 +225,8 @@ public class ExpensesDatasource {
 		return expenses;
 	}
 	
+	
+	
 	public Expenses getExpenseById(long id){
 				
 		Cursor cursor = database.query(MySqlLiteHelper.TABLE_EXPENSES, 
@@ -219,17 +240,23 @@ public class ExpensesDatasource {
 		return cursorToExpense(cursor);
 	}
 	
+	
+	
 	public long getTotalDebits(){
 		Cursor cursorDebits = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " WHERE " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'D';" , null);
 		cursorDebits.moveToFirst();
 		return cursorDebits.getLong(0);		
 	}
 	
+	
+	
 	public long getTotalCredits(){
 		Cursor cursorCredits = database.rawQuery("SELECT SUM(" + MySqlLiteHelper.EXPENSES_COST + ") from " + MySqlLiteHelper.TABLE_EXPENSES + " WHERE " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'C';" , null);
 		cursorCredits.moveToFirst();
 		return cursorCredits.getLong(0);		
 	}
+	
+	
 	
 	public long getTotalDebitsForMonth(int month, int year){
 		
@@ -241,6 +268,8 @@ public class ExpensesDatasource {
 		return cursor.getLong(0);
 	}
 	
+	
+	
 	public long getTotalCreditsForMonth(int month, int year){
 		
 		Calendar from = Common.getFirstDayOfMonth(month, year);
@@ -250,6 +279,8 @@ public class ExpensesDatasource {
 		cursor.moveToFirst();
 		return cursor.getLong(0);
 	}
+	
+	
 	
 	public ArrayList<ExpensesCategoryWise> getTotalDebitCategoryWise(){
 		String sql = "select " + MySqlLiteHelper.EXPENSES_CATEGORY+ " , " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT +  ", sum(" + MySqlLiteHelper.EXPENSES_COST+") as " + MySqlLiteHelper.EXPENSES_COST + " from " + MySqlLiteHelper.TABLE_EXPENSES+ " where " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'D' " +  " group by " + MySqlLiteHelper.EXPENSES_CATEGORY+";";
@@ -275,6 +306,46 @@ public class ExpensesDatasource {
 		return categoryWiseExpenses;
 	}
 	
+	
+	
+	public ArrayList<ExpensesCategoryWise> getTotalDebitCategoryWiseForMonth(int month, int year){
+		
+		Calendar from = Common.getFirstDayOfMonth(month, year);
+		Calendar to = Common.getLastDayOfMonth(month,year);
+		
+		String sql = " select " + MySqlLiteHelper.EXPENSES_CATEGORY + " , " + 
+					 MySqlLiteHelper.EXPENSES_DEBIT_CREDIT +  ", " +
+					 " sum(" + MySqlLiteHelper.EXPENSES_COST+") as " + MySqlLiteHelper.EXPENSES_COST + 
+					 " from " + MySqlLiteHelper.TABLE_EXPENSES + 
+					 " where " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'D' " +
+					 " AND " + MySqlLiteHelper.EXPENSES_DATE + " >= " + from.getTimeInMillis() + 
+					 " AND " + MySqlLiteHelper.EXPENSES_DATE + " <= " + to.getTimeInMillis() + 
+					 " group by " + MySqlLiteHelper.EXPENSES_CATEGORY+
+					 ";";
+		Log.d("shashank", sql);
+		Cursor cursor = database.rawQuery(sql, null);
+		cursor.moveToFirst();
+		Log.d("shashank", "returned rows " +cursor.getCount());
+		//hash map to store <category, sum of cost> and pass the data 		
+		//HashMap<String, String> map = new HashMap<String, String>();
+		
+		ArrayList<ExpensesCategoryWise> categoryWiseExpenses 
+			= new ArrayList<ExpensesCategoryWise>();
+		
+		while(!cursor.isAfterLast()){
+			//map.put(cursor.getString(0), cursor.getString(1));
+			ExpensesCategoryWise expensesCategoryWise = new ExpensesCategoryWise();
+			expensesCategoryWise.setCategory(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_CATEGORY)));
+			expensesCategoryWise.setDebits(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_COST)));
+			expensesCategoryWise.setType(cursor.getString(cursor.getColumnIndex(MySqlLiteHelper.EXPENSES_DEBIT_CREDIT)));
+			categoryWiseExpenses.add(expensesCategoryWise);
+			cursor.moveToNext();
+		}		
+		return categoryWiseExpenses;
+	}
+	
+	
+	
 	public ArrayList<ExpensesCategoryWise> getTotalCreditCategoryWise(){
 		String sql = "select " + MySqlLiteHelper.EXPENSES_CATEGORY + " , " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT +  ", sum(" + MySqlLiteHelper.EXPENSES_COST+") as " + MySqlLiteHelper.EXPENSES_COST + " from " + MySqlLiteHelper.TABLE_EXPENSES+ " where " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT + " = 'C' " +  " group by " + MySqlLiteHelper.EXPENSES_CATEGORY+" , " + MySqlLiteHelper.EXPENSES_DEBIT_CREDIT +";";
 		Log.d("shashank", sql);
@@ -298,6 +369,7 @@ public class ExpensesDatasource {
 		}		
 		return categoryWiseExpenses;
 	}
+	
 	
 	
 	public ArrayList<ExpensesCategoryWise> getTotalCategoryWise(){
@@ -331,6 +403,7 @@ public class ExpensesDatasource {
 	}
 	
 	
+	
 	public ArrayList<String>getDistinctCategories(){
 		
 		Cursor cursor = database.rawQuery("SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES , null);
@@ -344,6 +417,8 @@ public class ExpensesDatasource {
 		return categories;
 	}
 	
+	
+	
 	public ArrayList<String>getDistinctSubCategories(){
 		
 		Cursor cursor = database.rawQuery("SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES , null);
@@ -356,6 +431,8 @@ public class ExpensesDatasource {
 		}
 		return categories;
 	}
+	
+	
 	
 	public ArrayList<ExpensesSubCategoryWise> getTotalSubCategoryWise(String category){
 		String sql = " select " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY+"," + 
@@ -390,6 +467,8 @@ public class ExpensesDatasource {
 		database.execSQL("delete from " + MySqlLiteHelper.TABLE_EXPENSES + ";");
 	}
 	
+	
+	
 	public void updateDateFormat(){
 		Cursor cursor = database.query(MySqlLiteHelper.TABLE_EXPENSES, 
 				new String[]{MySqlLiteHelper.EXPENSES_ID, MySqlLiteHelper.EXPENSES_DATE}, 
@@ -421,9 +500,13 @@ public class ExpensesDatasource {
 		}
 	}
 	
+	
+	
 	public void dropTable(){
 		database.execSQL("drop table " + MySqlLiteHelper.TABLE_EXPENSES + ";");
 	}
+	
+	
 	
 	public boolean has(String str){
 		if(str!=null && str.length() > 0)

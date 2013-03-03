@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.shared.Common;
+import com.example.expensiv.shared.Const;
 
 import android.app.Activity;
 import android.content.Context;
@@ -48,8 +49,11 @@ public class ExpenseItemAdapter extends ArrayAdapter {
 		Expenses expense = (Expenses) this.data.get(position);
 		cost.setText(expense.getCost());
 		Log.e("shashank", expense.getCost() +" debcred - " + expense.getDebitCredit());
-		if("C".equals(expense.getDebitCredit())){
+		if(Const.CREDIT.equals(expense.getDebitCredit())){
 			cost.setTextColor(Color.parseColor("#00BB3F"));
+		}
+		else if(Const.WITHDRAW.equals(expense.getDebitCredit())){
+			cost.setTextColor(Color.parseColor("#000000"));
 		}
 		// titleDate.setText(expense.getTitle() + " - " +
 		// Common.getDateCompatible(expense.getDate()));

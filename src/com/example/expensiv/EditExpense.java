@@ -1,5 +1,6 @@
 package com.example.expensiv;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -20,12 +21,19 @@ import android.widget.Toast;
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
 import com.example.expensiv.shared.Common;
+import com.example.expensiv.shared.Const;
 import com.example.expensiv.shared.Intents;
 
 public class EditExpense extends Activity {
 	
 	private ExpensesDatasource datasource;
 	Spinner debitcredit;
+	private EditText category;
+	private EditText subcategory;
+	private DatePicker date;
+	private EditText title;
+	private EditText cost;
+	private EditText id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,12 +47,12 @@ public class EditExpense extends Activity {
         
         Expenses expenseToEdit = datasource.getExpenseById(expenseIdToEdit);
         
-        EditText id = (EditText )findViewById(R.id.hidden_id);
-        EditText cost = (EditText )findViewById(R.id.txt_cost);
-        EditText title = (EditText )findViewById(R.id.txt_title);
-        DatePicker date = (DatePicker)findViewById(R.id.dp_editExpenseDate);
-        EditText category = (EditText )findViewById(R.id.txt_category);
-        EditText subcategory = (EditText )findViewById(R.id.txt_sub_category);
+        id = (EditText )findViewById(R.id.hidden_id);
+        cost = (EditText )findViewById(R.id.txt_cost);
+        title = (EditText )findViewById(R.id.txt_title);
+        date = (DatePicker)findViewById(R.id.dp_editExpenseDate);
+        category = (EditText )findViewById(R.id.txt_category);
+        subcategory = (EditText )findViewById(R.id.txt_sub_category);
         debitcredit = (Spinner)findViewById(R.id.edit_debitcredit);
         
         
@@ -59,9 +67,10 @@ public class EditExpense extends Activity {
         
         ArrayAdapter<CharSequence> adapterDebitCredit = new ArrayAdapter<CharSequence>(
 				this, android.R.layout.simple_spinner_item, new String[] {
-						"Debit", "Credit" });
+						Const.DEBIT_TEXT, Const.CREDIT_TEXT, Const.WITHDRAW_TEXT });
+        adapterDebitCredit.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		debitcredit.setAdapter(adapterDebitCredit);
-		debitcredit.setSelection(adapterDebitCredit.getPosition(Common.debitCreditFromCD(expenseToEdit.getDebitCredit())));        
+		debitcredit.setSelection(adapterDebitCredit.getPosition(Common.debitCreditFromCode(expenseToEdit.getDebitCredit())));        
     }
 
     @Override
@@ -98,7 +107,7 @@ public class EditExpense extends Activity {
 			String strDate = Common.getUnixTimestampFromDatepicker(date);
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();
-			String strDebitCredit = Common.debitCreditToCD(debitcredit.getSelectedItem().toString());
+			String strDebitCredit = Common.debitCreditToCode(debitcredit.getSelectedItem().toString());
 			
 			Log.d("shashank", "saving value " + title.getText().toString() );
 			try{
@@ -119,22 +128,23 @@ public class EditExpense extends Activity {
     		
     }
     
-    
+    ////xml onClick handler ////
+	public void showCategoryChoices(View view){
+		getCategoryChoicesDialog().show();
+	}
+	
+	//// xml onClick handler ////
+	public void showSubCategoryChoices(View view){
+		getSubCategoryChoicesDialog().show();
+	}
+
     public void delete(View view){
     	EditText id = (EditText )findViewById(R.id.hidden_id);
     	Toast.makeText(this, "deleting... "+ id.getText(), Toast.LENGTH_LONG).show();
     	
-    	if(view.getId() == R.id.delete){
-			
-			
-						
-			
-			
+    	if(view.getId() == R.id.delete){			
 			try{
 			datasource.deleteExpense(id.getText().toString());			
-			
-
-			
 			Toast.makeText(this, "deleted "+ id.getText() + " !!! ", Toast.LENGTH_LONG).show();
 			Intent intent = Intents.MainActivity(this);//new Intent(this, MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -183,13 +193,14 @@ public class EditExpense extends Activity {
 		builder.setPositiveButton(R.string.viewAll, new DialogInterface.OnClickListener() {				
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// user clicked ADD MORE
+				// user clicked "View All"
 				Intent intent = new Intent(EditExpense.this, MainActivity.class);
 		 	startActivity(intent);
 		 	finish();
 			}
 		});
-		builder.setNegativeButton(R.string.addMore, new DialogInterface.OnClickListener() {				
+		//// no need to Add More after editing an entry 
+		/*builder.setNegativeButton(R.string.addMore, new DialogInterface.OnClickListener() {				
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// user clicked ADD MORE
@@ -197,7 +208,7 @@ public class EditExpense extends Activity {
 		 	startActivity(intent);
 		 	finish();
 			}
-		});
+		});*/
 		return builder.create();
     }
     
@@ -209,6 +220,60 @@ public class EditExpense extends Activity {
 		return builder.create();
     }
     
+    private AlertDialog getCategoryChoicesDialog(){
+		  Log.e("shashank", "getChooseCategoryDialog() called");
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setTitle("Select category");
+	    	//final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
+	    		    	
+	    	//builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
+	    	
+	    	final ArrayList<String> categoryChoices = datasource.getDistinctCategories();
+	    	
+	    	final ArrayAdapter<String> adapter =
+	    	new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
+	    	
+	    	builder.setAdapter(adapter, new DialogInterface.OnClickListener() {		
+				
+				public void onClick(DialogInterface dialog, int which) {					
+					setCategoryText(adapter.getItem(which));
+				}
+			});	    	
+	    	
+	    	return builder.create();	    	    			
+	    }
+	  
+	  private AlertDialog getSubCategoryChoicesDialog(){
+		  Log.e("shashank", "getSubCategoryChoicesDialog() called");
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setTitle("Select sub category");
+	    	//final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
+	    		    	
+	    	//builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
+	    	
+	    	final ArrayList<String> categoryChoices = datasource.getDistinctSubCategories();
+	    	
+	    	final ArrayAdapter<String> adapter =
+	    	new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
+	    	
+	    	builder.setAdapter(adapter, new DialogInterface.OnClickListener() {		
+				
+				public void onClick(DialogInterface dialog, int which) {					
+					setSubCategoryText(adapter.getItem(which));
+				}
+			});	    	
+	    	
+	    	return builder.create();
+	    	    			
+	    }
     ///// dialog boxes ////
     
+	  private void setCategoryText(String textToSet){
+			category.setText(textToSet);
+		}
+	  
+	  private void setSubCategoryText(String textToSet){
+			subcategory.setText(textToSet);
+		}
+	  
 }

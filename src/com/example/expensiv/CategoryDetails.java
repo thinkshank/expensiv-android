@@ -7,6 +7,7 @@ import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesCategoryWise;
 import com.example.expensiv.db.ExpensesDatasource;
 import com.example.expensiv.db.ExpensesSubCategoryWise;
+import com.example.expensiv.shared.Const;
 import com.example.expensiv.shared.Intents;
 
 import android.os.Bundle;
@@ -28,6 +29,14 @@ import android.widget.AdapterView.OnItemClickListener;
 public class CategoryDetails extends Activity {
 
 	private ExpensesDatasource datasource;
+	
+	private static final String EXTRA_FOR_MONTH = Const.EXTRA_FOR_MONTH;
+	private static final String EXTRA_FOR_YEAR = Const.EXTRA_FOR_YEAR;
+	
+	private int month = Calendar.getInstance().get(Calendar.MONTH);
+	private int year = Calendar.getInstance().get(Calendar.YEAR);
+	
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,14 @@ public class CategoryDetails extends Activity {
 
 		datasource = new ExpensesDatasource(this);
 		datasource.open();
+		
+		if(getIntent().hasExtra(EXTRA_FOR_YEAR)){
+        	year = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_YEAR));
+        }
+        
+        if(getIntent().hasExtra(EXTRA_FOR_MONTH)){
+        	month = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_MONTH));        	
+        }
 
 		// show debits by default
 		showDebits();
@@ -47,7 +64,8 @@ public class CategoryDetails extends Activity {
 		// List<ExpensesCategoryWise> values =
 		// datasource.getTotalCategoryWise();
 		List<ExpensesCategoryWise> values = datasource
-				.getTotalDebitCategoryWise();
+				//.getTotalDebitCategoryWise();
+				.getTotalDebitCategoryWiseForMonth(month, year);
 		Log.e("shashank", "category query got results " + values.size());
 
 		final CategoryWiseExpenseItemAdapter adapter = new CategoryWiseExpenseItemAdapter(
@@ -164,10 +182,6 @@ public class CategoryDetails extends Activity {
 		startActivity(intent);
 	}
 	// //xml on click handlers for menus ////
-
-	// ///////////////////////////////////////////////////////////////////////////
-	// //////// commented code ahead /////////////////////////////////////////
-	// ///////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * use this to enable swipe detection

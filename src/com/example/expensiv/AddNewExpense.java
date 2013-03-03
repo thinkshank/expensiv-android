@@ -216,7 +216,8 @@ public class AddNewExpense extends Activity {
 		
 		ArrayAdapter<CharSequence> adapterDebitCredit = new ArrayAdapter<CharSequence>(
 				this, android.R.layout.simple_spinner_item, new String[] {
-						"Debit", "Credit" });
+						Const.DEBIT_TEXT, Const.CREDIT_TEXT, Const.WITHDRAW_TEXT });
+		adapterDebitCredit.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		debitcredit.setAdapter(adapterDebitCredit);
 		debitcredit.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -374,7 +375,7 @@ public class AddNewExpense extends Activity {
 			String strDate = Common.getUnixTimestampFromDatepicker(date);
 			String strCategory = category.getText().toString();
 			String strSubCategory = subCategory.getText().toString();
-			String strDebitCredit = Common.debitCreditToCD(debitcredit.getSelectedItem().toString());
+			String strDebitCredit = Common.debitCreditToCode(debitcredit.getSelectedItem().toString());
 			Log.e("shashank" , "strDebitCredit - "+ strDebitCredit);
 
 			ExpensivError error = validate(strTitle, strCost, strDate,
@@ -556,7 +557,7 @@ public class AddNewExpense extends Activity {
 	    	builder.setAdapter(adapter, new DialogInterface.OnClickListener() {		
 				
 				public void onClick(DialogInterface dialog, int which) {					
-					setCategoryText(adapter.getItem(which));
+					setSubCategoryText(adapter.getItem(which));
 				}
 			});	    	
 	    	
@@ -594,6 +595,10 @@ public class AddNewExpense extends Activity {
 	
 	private void setCategoryText(String textToSet){
 		category.setText(textToSet);
+	}
+	
+	private void setSubCategoryText(String textToSet){
+		subCategory.setText(textToSet);
 	}
 
 }

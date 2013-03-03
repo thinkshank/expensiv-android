@@ -6,27 +6,35 @@
 
 	<uses-permission android:name="android.permission.READ_SMS" />
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	<uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
-	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	
+
+	<!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
+		/> <uses-permission android:name="android.permission.READ_PHONE_STATE" /> 
+		<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
 	<!-- android:theme="@style/AppTheme" > -->
-	<application android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name" android:theme="@android:style/Theme.Light">
+	<application android:icon="@drawable/rupee_33b6ea"
+		android:label="@string/app_name" android:theme="@style/AppTheme" > 
 		
-	    <receiver android:name=".SMSBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
-            </intent-filter>
-        </receiver>
-        
-	    <service
-            android:name=".AutoCreateService"
-            android:label="@string/category" >
-        </service>
-        
-		<activity android:name=".MainActivity" android:label="@string/title_activity_main"
-			android:theme="@android:style/Theme.Light">
+		<!-- android:theme="@android:style/Theme.Light"  -->
+
+		<receiver android:enabled="true" android:name=".SMSBroadcastReceiver">
+			<intent-filter>
+				<action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
+			</intent-filter>
+		</receiver>
+
+	<!-- <receiver android:name=".PhoneStateBroadcastReceiver"> <intent-filter> 
+		<action android:name="android.intent.action.PHONE_STATE" /> </intent-filter> 
+		</receiver> -->
+
+		<service android:name=".AutoCreateService" android:label="@string/category">
+		</service>
+
+		<activity android:name=".MainActivity" android:label="@string/title_activity_main">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -60,8 +68,9 @@
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 				android:value=".MainActivity" />
 		</activity>
-		
-		<activity android:name=".ContactManager" android:label="@string/title_activity_add_new_expense">
+
+		<activity android:name=".ContactManager"
+			android:label="@string/title_activity_add_new_expense">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 				android:value=".MainActivity" />
 		</activity>

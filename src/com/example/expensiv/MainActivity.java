@@ -1,6 +1,8 @@
 package com.example.expensiv;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.MailTo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -35,6 +38,8 @@ import android.widget.Toast;
 
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
+import com.example.expensiv.db.FileUtils;
+import com.example.expensiv.db.MySqlLiteHelper;
 import com.example.expensiv.shared.Const;
 import com.example.expensiv.shared.Intents;
 
@@ -50,14 +55,14 @@ public class MainActivity extends Activity {
 	private ExpensesDatasource datasource;
 	private int month = Calendar.getInstance().get(Calendar.MONTH);
 	private int year = Calendar.getInstance().get(Calendar.YEAR);
-	  
-	
+		
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);        
         
+        //// check and set intent for month and year
         if(getIntent().hasExtra(EXTRA_FOR_YEAR)){
         	year = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_YEAR));
         }
@@ -65,7 +70,9 @@ public class MainActivity extends Activity {
         if(getIntent().hasExtra(EXTRA_FOR_MONTH)){
         	month = Integer.parseInt(getIntent().getStringExtra(EXTRA_FOR_MONTH));        	
         }
-     /*   // swipe right on "all months"
+        ////
+        
+        /*  // swipe right on "all months"
     	if(month>12){
     		month = 0;
     		year = year + 1 ;
@@ -83,7 +90,6 @@ public class MainActivity extends Activity {
         
         datasource = new ExpensesDatasource(this);
         datasource.open();
-        
         datasource.updateDateFormat();
         
         List<Expenses> values = null; 
@@ -125,6 +131,7 @@ public class MainActivity extends Activity {
         //// handle long click on list item ////
         
         //// handle click on list item ////
+        //// EDIT : handled by long click instead ////
        /* listview.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
@@ -141,27 +148,22 @@ public class MainActivity extends Activity {
         TextView currentMonth= (TextView)findViewById(R.id.currentMonth);
         
         TextView totalExpense = (TextView)findViewById(R.id.totalExpense);
+        double debits,credits;
         
         if(month == 12){
         	currentMonth.setText(" All months ");
-        	double debits = datasource.getTotalDebits();
-        	double credits = datasource.getTotalCredits();        	
-        	totalExpense.setText(" Debits - "+ debits);
-        	totalExpense.append(" | Credits - "+ credits);
-        	if((credits - debits) >= 0.0)
-        	{totalExpense.append(" | Balance - "+ (credits - debits));}        	
+        	debits = datasource.getTotalDebits();
+        	credits = datasource.getTotalCredits();        	
         }else{
         	currentMonth.setText(new SimpleDateFormat("MMMM-yy").format(new Date(year, month,1)));
-        	double debits = datasource.getTotalDebitsForMonth(month,year);
-        	double credits = datasource.getTotalCreditsForMonth(month,year);
-        	
-        	totalExpense.setText(" Debits - "+ debits);
-        	totalExpense.append(" | Credits - "+ credits);
-        	if((credits - debits) >= 0.0)
-        	{totalExpense.append(" | Balance - "+ (credits - debits));}
-        	//totalExpense.append(" | Total - "+ (credits - debits));
-        		
+        	debits = datasource.getTotalDebitsForMonth(month,year);
+        	credits = datasource.getTotalCreditsForMonth(month,year);        		
         }
+        
+        totalExpense.setText(" Debits - "+ debits);
+    	totalExpense.append(" | Credits - "+ credits);
+    	if((credits - debits) >= 0.0)
+    	{totalExpense.append(" | Balance - "+ (credits - debits));}
         
         
         totalExpense.setOnClickListener(new OnClickListener() {
@@ -270,6 +272,7 @@ public class MainActivity extends Activity {
     	int prevYear;
     	Intent intent = Intents.MainActivity(this);
     	
+    	/*
     	// swipe left on "all months" should give "jan" last year
     	if(month==12){
     		prevMonth = 11;
@@ -289,7 +292,17 @@ public class MainActivity extends Activity {
     		intent.putExtra(EXTRA_FOR_MONTH, "" + (prevMonth));
     		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
     	}
+    	*/
     	
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.MONTH, month);
+    	cal.set(Calendar.YEAR,year);
+    	cal.add(Calendar.MONTH, -1);
+    	prevMonth = cal.get(Calendar.MONTH);
+    	prevYear = cal.get(Calendar.YEAR);
+    	
+    	intent.putExtra(EXTRA_FOR_MONTH, "" + (prevMonth));
+		intent.putExtra(EXTRA_FOR_YEAR, "" + (prevYear));
     	startActivity(intent);
     	
 	}
@@ -300,7 +313,8 @@ public class MainActivity extends Activity {
     	
     	int nextMonth; 
     	int nextYear;
-    	Intent intent = Intents.MainActivity(this);
+    	
+    	/*
     	// swipe right on "all months"
     	if(month==12){
     		nextMonth= 0;
@@ -316,11 +330,21 @@ public class MainActivity extends Activity {
     		intent.putExtra(EXTRA_FOR_MONTH, "" + (nextMonth));
     		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
     	}
+    	*/
     	
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.MONTH, month);
+    	cal.set(Calendar.YEAR,year);
+    	cal.add(Calendar.MONTH, 1);
+    	nextMonth = cal.get(Calendar.MONTH);
+    	nextYear = cal.get(Calendar.YEAR);
     	
-    	
-    	
-    	startActivity(intent);    	
+    	if (cal.before(Calendar.getInstance())){
+    	Intent intent = Intents.MainActivity(this);
+    	intent.putExtra(EXTRA_FOR_MONTH, "" + (nextMonth));
+		intent.putExtra(EXTRA_FOR_YEAR, "" + (nextYear));    	
+    	startActivity(intent);
+    	}
 	}
     
     
@@ -335,7 +359,9 @@ public class MainActivity extends Activity {
     ////xml onClick handler
     public void viewCategoryWise(View view){
     	Intent intent = Intents.CategoryDetails(this);
-    	startActivity(intent);
+    	intent.putExtra(EXTRA_FOR_MONTH, "" + (month));
+		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
+    	startActivity(intent);    	
     }
     
     
@@ -381,9 +407,62 @@ public class MainActivity extends Activity {
     
     public void showCategoryWise(MenuItem menuItem) {
     	Intent intent = Intents.CategoryDetails(this);
+    	intent.putExtra(EXTRA_FOR_MONTH, "" + (month));
+		intent.putExtra(EXTRA_FOR_YEAR, "" + (year));
     	startActivity(intent);    	
 	}
     
+    
+    
+    public void backupDB(MenuItem menuItem) {
+    	String dbname = MySqlLiteHelper.DB_NAME;
+    	 
+    	String [] todir = new String [4]; 
+        todir[0] = Environment.getExternalStorageDirectory().toString();
+    	todir[1] = Environment.getDataDirectory().toString();
+    	todir[2] = Environment.getRootDirectory().toString();
+    	todir[3] = todir[0] + "/expensiv";
+    	 
+    	
+    	String fromDBpath = this.getDatabasePath(MySqlLiteHelper.DB_NAME).toString();
+    	File saveToDir = new File(Environment.getExternalStorageDirectory() + "/" + "expensiv");
+    	if(!saveToDir.exists()){
+    		saveToDir.mkdir();
+    		Log.e("shashank", saveToDir.toString() + " created ");
+    	}else{Log.e("shashank", saveToDir.toString() + " exists ");}
+    	Log.e("shashank", saveToDir.toString() + "  is dir?" + saveToDir.isDirectory());
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyMMMdd");
+    	String datepart = sdf.format(new Date());
+    	String toDBPath =  saveToDir.toString() + "/" +dbname + "_" + datepart + ".bak";
+     	
+    	Log.e("shashank", "dbname : " + dbname); 
+    	Log.e("shashank", "dbpath : " + fromDBpath);
+    	Log.e("shashank", "dbpath : " + toDBPath);
+    	/*for (String s : todir)
+    	 {Log.e("shashank", "todir : " + s);
+    	 File f = new File(s);
+    	 if(!f.exists()) 
+    		 try{f.createNewFile();}catch(Exception e){e.printStackTrace();}
+    	 Log.e("shashank", "write : " + new File(s).canWrite());}*/
+    	
+    	try{
+    		//File oldDb = new File(fromDBpath);
+    		//Log.e("shashank", "canread ? : " + oldDb.canRead());
+    	//boolean result = FileUtils.copyDatabase(fromDBpath, toDBPath);
+    		File oldFile = new File(fromDBpath);
+    		File newFile = new File(toDBPath);
+    		if(newFile.exists())
+    			{newFile.delete();}
+    		boolean result = FileUtils.copyFile(oldFile, newFile);
+    		if(result){Toast.makeText(this, "Backup Successful.", Toast.LENGTH_SHORT).show();}
+    		else{Toast.makeText(this, "Backup Failed.", Toast.LENGTH_SHORT).show();}
+    	Log.e("shashank", "copyresult : " + result);
+    	}
+    	catch (Exception e){
+    		e.printStackTrace();
+    	}
+    	
+	}
     
     
     public void showReadSms(MenuItem menuItem) {
@@ -479,7 +558,7 @@ public class MainActivity extends Activity {
     
     	}
 
-    	private static final int SWIPE_MIN_DISTANCE = 50;
+    	private static final int SWIPE_MIN_DISTANCE = 150;
         private static final int SWIPE_MAX_OFF_PATH = 250;
         private static final int SWIPE_THRESHOLD_VELOCITY = 50;
         

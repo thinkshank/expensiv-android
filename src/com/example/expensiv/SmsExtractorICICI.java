@@ -42,11 +42,11 @@ public class SmsExtractorICICI extends SmsExtractorDefault {
 		String debit = scanner.findInLine(PATTERN_IS_DEBIT);
 		String credit = scanner.findInLine(PATTERN_IS_CREDIT);
 		if(debit!=null){
-			Log.e("shashank", " getType : " + Const.debit);
-			return Const.debit;
+			Log.e("shashank", " getType : " + Const.DEBIT);
+			return Const.DEBIT;
 		}else if(credit!=null){
-			Log.e("shashank", " getType : " + Const.credit);
-			return Const.credit;
+			Log.e("shashank", " getType : " + Const.CREDIT);
+			return Const.CREDIT;
 		}
 		return null;
 	}
@@ -57,7 +57,7 @@ public class SmsExtractorICICI extends SmsExtractorDefault {
 			return null;
 		}
 		
-		if(getType(str).equals(Const.debit)){
+		if(getType(str).equals(Const.DEBIT)){
 			Scanner scanner = new Scanner(str);
 			String isAtm = scanner.findInLine(PATTERN_IS_ATM);
 			String isWithdrawal = scanner.findInLine(PATTERN_IS_WITHDRAWAL);
@@ -74,9 +74,9 @@ public class SmsExtractorICICI extends SmsExtractorDefault {
 			return null;
 		}
 		
-		if(getType(smsbody).equals(Const.debit)){
+		if(getType(smsbody).equals(Const.DEBIT)){
 			return "DEBIT";
-		}else if(getType(smsbody).equals(Const.credit)){
+		}else if(getType(smsbody).equals(Const.CREDIT)){
 			return "CREDIT";
 		}
 		return null;

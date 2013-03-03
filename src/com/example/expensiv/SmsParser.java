@@ -13,14 +13,17 @@ public class SmsParser {
 	public static HashMap<String, String> id_name = new HashMap<String, String>();
 	public static HashMap<String, String> number_id = new HashMap<String, String>();
 	static{
-		number_id.put("9920979434", "0");
-		id_name.put("0", "SHASHANK");
+		number_id.put("9920979434", Const.BANK_ID_DEFAULT);
+		id_name.put(Const.BANK_ID_DEFAULT, "SHASHANK");
 		
-		number_id.put("LM-FROMSC", "1");
-		id_name.put("1", "STANDARD-CHARTERED");
+		number_id.put("9920449704", Const.BANK_ID_SONYU);
+		id_name.put(Const.BANK_ID_SONYU, "SONYU");
 		
-		number_id.put("LM-ICICIB", "2");
-		id_name.put("2", "ICICI");
+		number_id.put("LM-FROMSC", Const.BANK_ID_STANC);
+		id_name.put(Const.BANK_ID_STANC, "STANDARD-CHARTERED");
+		
+		number_id.put("LM-ICICIB", Const.BANK_ID_ICICI);
+		id_name.put(Const.BANK_ID_ICICI, "ICICI");
 	}
 	
 	private SmsExtractor extractor;

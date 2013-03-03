@@ -191,13 +191,20 @@ public class Common {
 		});
 	}
 	
-	public static String debitCreditToCD(String dropdowntext)
+	public static String debitCreditToCode(String dropdowntext)
 	{
-		return "Credit".equals(dropdowntext)?"C":"D";
+		if (Const.CREDIT_TEXT.equals(dropdowntext)) return Const.CREDIT;
+		if (Const.DEBIT_TEXT.equals(dropdowntext)) return Const.DEBIT;
+		if (Const.WITHDRAW_TEXT.equals(dropdowntext)) return Const.WITHDRAW;
+		return Const.DEBIT;
 	}
 	
-	public static String debitCreditFromCD(String singlechar)
+	public static String debitCreditFromCode(String singlechar)
 	{
-		return "C".equals(singlechar)?"Credit":"Debit";
+		if (Const.CREDIT.equals(singlechar)) return Const.CREDIT_TEXT;
+		if (Const.DEBIT.equals(singlechar)) return Const.DEBIT_TEXT;
+		if (Const.WITHDRAW.equals(singlechar)) return Const.WITHDRAW_TEXT;
+		return Const.DEBIT;
+		//return Const.CREDIT.equals(singlechar)?Const.CREDIT_TEXT:Const.DEBIT_TEXT;
 	}
 }

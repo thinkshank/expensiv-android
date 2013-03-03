@@ -39,24 +39,57 @@
         <DatePicker
             android:id="@+id/dp_editExpenseDate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:calendarViewShown="false"/>
 
-        <EditText
-            android:id="@+id/txt_category"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/category" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/txt_sub_category"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/sub_category" />
+            <EditText
+                android:id="@+id/txt_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/category" />
+
+            <Button
+                android:id="@+id/showCategories"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="showCategoryChoices"
+                android:text="@string/list" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/txt_sub_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/sub_category" />
+
+            <Button
+                android:id="@+id/showSubCategories"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="showSubCategoryChoices"
+                android:text="@string/list" />
+        </LinearLayout>
         
          <Spinner
             android:id="@+id/edit_debitcredit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            parent="@android:style/Widget.Holo.Light.Spinner"/>
 
         <!--
          <EditText
