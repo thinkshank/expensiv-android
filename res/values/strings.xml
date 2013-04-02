@@ -14,8 +14,9 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="category_wise">Categories</string>
-    <string name="read_sms">Read Sms</string>
+    <string name="read_sms">Read SMS</string>
     <string name="backup">Backup</string>
+    <string name="send_sms">SMS Banking</string>
     <string name="title_activity_add_new_expense">AddNewExpense</string>
     <string name="title_activity_edit_expense">Edit Expense</string>
     <string name="title">Title</string>

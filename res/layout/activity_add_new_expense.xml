@@ -34,7 +34,8 @@
             android:id="@+id/dp_expenseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:calendarViewShown="false" />
+            android:calendarViewShown="false" 
+            style="@style/AppThemeBlack"  />
 
         <!--
          <EditText

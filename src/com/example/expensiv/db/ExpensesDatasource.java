@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.example.expensiv.shared.Common;
+import com.example.expensiv.shared.Const;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -39,6 +40,7 @@ public class ExpensesDatasource {
 	
 	public void open() throws SQLException{
 		database = dbhelper.getWritableDatabase();
+		
 		Log.w("shashank", "db file location : "  + database.getPath());
 	}
 	
@@ -417,11 +419,50 @@ public class ExpensesDatasource {
 		return categories;
 	}
 	
+	public ArrayList<String>getDistinctCategoriesLike(String str){
+		
+		if(!Common.has(str)){
+			return getDistinctCategories();
+		}
+		
+		str = str.trim();
+		String sql = "SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES + " where " + "UPPER(" + MySqlLiteHelper.EXPENSES_CATEGORY  + ") "+ " like " + "'%" + str.toUpperCase() + "%'";
+		Log.e("shashank", sql);
+		Cursor cursor = database.rawQuery(sql, null);
+		cursor.moveToFirst();
+		ArrayList<String> categories = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			categories.add(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		return categories;
+	}
 	
 	
 	public ArrayList<String>getDistinctSubCategories(){
 		
 		Cursor cursor = database.rawQuery("SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES , null);
+		cursor.moveToFirst();
+		ArrayList<String> categories = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			categories.add(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		return categories;
+	}
+	
+	public ArrayList<String>getDistinctSubCategoriesLike(String str){
+		
+		if(!Common.has(str)){
+			return getDistinctSubCategories();
+		}
+		str = str.trim();
+		String sql = "SELECT DISTINCT " + MySqlLiteHelper.EXPENSES_SUB_CATEGORY + " from " + MySqlLiteHelper.TABLE_EXPENSES + " where " + "UPPER(" + MySqlLiteHelper.EXPENSES_SUB_CATEGORY  + ") "+ " like " + "'%" + str.toUpperCase() + "%'";
+		Log.e("shashank", sql);
+				
+		Cursor cursor = database.rawQuery( sql, null);
 		cursor.moveToFirst();
 		ArrayList<String> categories = new ArrayList<String>();
 		cursor.moveToFirst();

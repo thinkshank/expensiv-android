@@ -40,7 +40,8 @@
             android:id="@+id/dp_editExpenseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
-            android:calendarViewShown="false"/>
+            android:calendarViewShown="false"
+            style="@style/AppThemeBlack"/>
 
         
         <LinearLayout

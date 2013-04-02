@@ -3,6 +3,9 @@ package com.example.expensiv.shared;
 
 public class Const {
 	
+	public static final String PREFS_SHARED_NAME = "PREFS_SHARED_NAME";
+	public static final String PREFS_REFRESH_BANK_DB= "PREFS_REFRESH_BANK_DB";
+	
 	public static final String DEBIT = "D";
 	public static final String CREDIT = "C";
 	public static final String WITHDRAW = "W";

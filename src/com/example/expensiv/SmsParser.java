@@ -19,11 +19,11 @@ public class SmsParser {
 		number_id.put("9920449704", Const.BANK_ID_SONYU);
 		id_name.put(Const.BANK_ID_SONYU, "SONYU");
 		
-		number_id.put("LM-FROMSC", Const.BANK_ID_STANC);
+		number_id.put("FROMSC", Const.BANK_ID_STANC);
 		id_name.put(Const.BANK_ID_STANC, "STANDARD-CHARTERED");
 		
-		number_id.put("LM-ICICIB", Const.BANK_ID_ICICI);
-		id_name.put(Const.BANK_ID_ICICI, "ICICI");
+		number_id.put("ICICIB", Const.BANK_ID_ICICI);
+		id_name.put(Const.BANK_ID_ICICI, "ICICI");		
 	}
 	
 	private SmsExtractor extractor;

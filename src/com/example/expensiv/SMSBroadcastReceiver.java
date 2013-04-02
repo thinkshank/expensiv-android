@@ -35,12 +35,12 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
                             Log.i(TAG, "Message index SIM : " + messages[0].getIndexOnSim() );
                             // Toast.makeText(this, "Message recieved" , Toast.LENGTH_LONG).show();
                             // Intent intent = new Intent(ReadSms.this, AddNewExpense.class);
-                            //Intent i = new Intent(context, AddNewExpense.class);
+                            // Intent i = new Intent(context, AddNewExpense.class);
                             String sender = messages[0].getOriginatingAddress();
                             String body   = messages[0].getMessageBody();
                             
-                            /// if the sender is known, then process it automatically.
-                            //if(SmsParser.number_id.containsKey(sender))
+                            // if the sender is known, then process it automatically.
+                            // if(SmsParser.number_id.containsKey(sender))
                             
                             for(String num : SmsParser.number_id.keySet()){
                     			if(num!=null)
@@ -48,7 +48,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
                     			
                     			if(sender.contains(num)){
                     				Intent i = new Intent(context, AutoCreateService.class);
-                                    //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     i.putExtra(Const.EXTRA_SMS_SENDER, sender);
                                     i.putExtra(Const.EXTRA_SMS_BODY, body);
                                     context.startService(i);

@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.MailTo;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,10 +38,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.expensiv.db.BankSMS;
+import com.example.expensiv.db.BankSMSDatasource;
 import com.example.expensiv.db.Expenses;
 import com.example.expensiv.db.ExpensesDatasource;
 import com.example.expensiv.db.FileUtils;
 import com.example.expensiv.db.MySqlLiteHelper;
+import com.example.expensiv.db.SQLStatements;
 import com.example.expensiv.shared.Const;
 import com.example.expensiv.shared.Intents;
 
@@ -100,13 +105,13 @@ public class MainActivity extends Activity {
         values = datasource.getAllExpensesForMonth(month, year);
         }
         
+        
         //final ArrayAdapter<Expenses> adapter = 
         //		new ArrayAdapter<Expenses>(this,
         //								   android.R.layout.simple_list_item_1,
         //								   values);
         
-        final ExpenseItemAdapter adapter = 
-        		new ExpenseItemAdapter(this,values);
+        final ExpenseItemAdapter adapter = new ExpenseItemAdapter(this,values);
 
         
     	//ArrayAdapter<String> adapter =
@@ -206,9 +211,44 @@ public class MainActivity extends Activity {
  			listview.getRootView().setOnTouchListener(gestureListener);
  			
  			
- 			
-        //sendSMS("TD-12345", String message)
-        
+ 		
+ 		
+ 		Log.i("shashank", " querying bankds " );
+ 		BankSMSDatasource bankds = new BankSMSDatasource(this);
+ 		SharedPreferences prefs = getSharedPreferences(Const.PREFS_SHARED_NAME, MODE_PRIVATE);
+ 		SharedPreferences.Editor editor = prefs.edit();
+ 		Log.d("shashank", "PREFS_FIRST_RUN" + prefs.getBoolean(Const.PREFS_REFRESH_BANK_DB, false));
+ 		
+ 		if(!prefs.getBoolean(Const.PREFS_REFRESH_BANK_DB, false)){
+ 			List<String> banksmslist = new SQLStatements().getBankSMSInsertSQL();
+ 			if(banksmslist!=null){
+ 	 			bankds.refreshBankSMS(banksmslist);
+ 	 			editor.putBoolean(Const.PREFS_REFRESH_BANK_DB, true);
+ 	 			editor.commit();
+ 	 		}
+ 		}
+ 		
+ 		bankds.open();
+ 		/*int count = 0;
+ 		
+ 		try {
+ 		List<BankSMS> l = bankds.getAllBankSMS();
+ 		Log.i("shashank", " got records " + l.size());
+ 		count = l.size();
+ 		}
+ 		catch(Exception e){
+ 			e.printStackTrace();
+ 		}
+ 		
+ 		List<String> banksmslist = new SQLStatements().getBankSMSInsertSQL();
+ 		if(banksmslist==null|| banksmslist.size()!=count){
+ 			bankds.refreshBankSMS(banksmslist);
+ 		} 		
+ 		
+ 		List<BankSMS> banks = bankds.getDistinctBanks();
+ 		Log.i("shashank", banks.toString());
+ 		*/
+ 		bankds.close(); 		
     }
     
     
@@ -390,6 +430,12 @@ public class MainActivity extends Activity {
         case R.id.menu_read_sms:
         	showReadSms(item);
             return true;
+        case R.id.menu_backup:
+        	backupDB(item);
+        	return true;
+        case R.id.menu_send_sms:
+        	showBankSMSBankList(item);
+        	return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -470,7 +516,10 @@ public class MainActivity extends Activity {
     	startActivity(intent);    	
 	}   
        
-    
+    public void showBankSMSBankList(MenuItem menuItem) {
+    	Intent intent = Intents.BankSMSBankList(this);
+    	startActivity(intent);
+	}   
         
     //// helper methods ////
     public void openExpenseForEdit(Expenses expense) {
@@ -631,6 +680,7 @@ public class MainActivity extends Activity {
 				//Toast.makeText(MainActivity.this, months[which], Toast.LENGTH_LONG).show();
 				Intent intent = Intents.MainActivity(MainActivity.this);
 				intent.putExtra(EXTRA_FOR_MONTH, ""+which);
+				dialog.dismiss();
 				startActivity(intent);				
 			}
 		});

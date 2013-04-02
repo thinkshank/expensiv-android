@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.expensiv.AddNewExpense;
+import com.example.expensiv.BankSMSListBanks;
+import com.example.expensiv.BankSMSListCommands;
 import com.example.expensiv.CategoryDetails;
 import com.example.expensiv.EditExpense;
 import com.example.expensiv.MainActivity;
@@ -43,5 +45,15 @@ public class Intents {
 	public static Intent DateWidgets1(Context caller ){
 		Intent intent = new Intent(caller, DateWidgets1.class);
     	return intent;		
+	}
+	
+	public static Intent BankSMSBankList(Context caller ){
+		Intent intent = new Intent(caller, BankSMSListBanks.class);
+    	return intent;
+	}
+	
+	public static Intent BankSMSListCommands(Context caller ){
+		Intent intent = new Intent(caller, BankSMSListCommands.class);
+    	return intent;
 	}
 }

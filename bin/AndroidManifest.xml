@@ -74,6 +74,18 @@
 			<meta-data android:name="android.support.PARENT_ACTIVITY"
 				android:value=".MainActivity" />
 		</activity>
+		
+		<activity android:name=".BankSMSListBanks"
+			android:label="@string/title_activity_add_new_expense">
+			<meta-data android:name="android.support.PARENT_ACTIVITY"
+				android:value=".MainActivity" />
+		</activity>
+		
+		<activity android:name=".BankSMSListCommands"
+			android:label="@string/title_activity_add_new_expense">
+			<meta-data android:name="android.support.PARENT_ACTIVITY"
+				android:value=".MainActivity" />
+		</activity>
 	</application>
 
 </manifest>

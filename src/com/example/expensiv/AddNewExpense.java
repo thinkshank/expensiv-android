@@ -52,6 +52,7 @@ public class AddNewExpense extends Activity {
 	private static final String EXTRA_FOR_MONTH = Const.EXTRA_FOR_MONTH;
 	static boolean blnradio;
 	//static AutoCompleteTextView mContactList;
+	static AutoCompleteTextView autocompleteCategory;
 	static EditText mContact;
 	static Spinner s1;
 	static Spinner debitcredit;
@@ -520,13 +521,28 @@ public class AddNewExpense extends Activity {
 	
 	  private AlertDialog getCategoryChoicesDialog(){
 		  Log.e("shashank", "getChooseCategoryDialog() called");
+		   
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    	builder.setTitle("Select category");
-	    	//final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
-	    		    	
-	    	//builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
 	    	
-	    	final ArrayList<String> categoryChoices = datasource.getDistinctCategories();
+	    	
+	    	ArrayList<String> temp = null;
+	    	if (Common.has(getCategoryText())){
+	    		Log.d("shashank", "getDistinctCategoriesLike");
+	    		temp = datasource.getDistinctCategoriesLike(getCategoryText()); 
+			}else{
+				Log.d("shashank", "getDistinctCategories");
+				temp = datasource.getDistinctCategories();
+			}
+	    	
+	    	final ArrayList<String> categoryChoices  = temp;
+	    	
+
+	    	String title = ""; 
+	    	if(categoryChoices != null && categoryChoices.size() > 0)
+	    	{title = "Select category";}
+	    	else
+	    	{title = "No exisitng categories";}
+	    	builder.setTitle(title);
 	    	
 	    	final ArrayAdapter<String> adapter =
 	    	new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
@@ -545,14 +561,21 @@ public class AddNewExpense extends Activity {
 		  Log.e("shashank", "getSubCategoryChoicesDialog() called");
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    	builder.setTitle("Select sub category");
-	    	//final String[] months = new String[]{"Jan","Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All"};
-	    		    	
-	    	//builder.setSingleChoiceItems(months, month, new DialogInterface.OnClickListener() {
 	    	
-	    	final ArrayList<String> categoryChoices = datasource.getDistinctSubCategories();
+	    	ArrayList<String> temp = null;
+	    	if (Common.has(getSubCategoryText())){
+	    		Log.d("shashank", "getDistinctSubCategoriesLike");
+	    		temp = datasource.getDistinctSubCategoriesLike(getSubCategoryText()); 
+			}else{
+				Log.d("shashank", "getDistinctSubCategories");
+				temp = datasource.getDistinctSubCategories();
+			}
 	    	
-	    	final ArrayAdapter<String> adapter =
-	    	new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
+	    	final ArrayList<String> categoryChoices = temp;
+	    	
+	    	final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryChoices);
+	    	
+	    	
 	    	
 	    	builder.setAdapter(adapter, new DialogInterface.OnClickListener() {		
 				
@@ -597,8 +620,15 @@ public class AddNewExpense extends Activity {
 		category.setText(textToSet);
 	}
 	
+	private String getCategoryText(){
+		return category.getText().toString();
+	}
 	private void setSubCategoryText(String textToSet){
 		subCategory.setText(textToSet);
+	}
+	
+	private String getSubCategoryText(){
+		return subCategory.getText().toString();
 	}
 
 }

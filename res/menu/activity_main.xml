@@ -25,5 +25,12 @@
         android:orderInCategory="100"
         android:title="@string/backup"
         android:showAsAction="ifRoom|withText"/>
+    
+     <item
+        android:id="@+id/menu_send_sms"
+        android:onClick="showBankSMSBankList"
+        android:orderInCategory="100"
+        android:title="@string/send_sms"
+        android:showAsAction="ifRoom|withText"/>
 
 </menu>

@@ -108,7 +108,8 @@ public class AutoCreateService extends Service {
   
 
   private static void generateNotification(Context context, String message) {
-      int icon = R.drawable.ic_launcher;
+      //int icon = R.drawable.ic_launcher;
+      int icon = R.drawable.rupee_33b6ea;
       long when = System.currentTimeMillis();
       NotificationManager notificationManager = (NotificationManager)
               context.getSystemService(Context.NOTIFICATION_SERVICE);

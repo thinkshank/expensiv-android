@@ -2,4 +2,7 @@
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light" />
 
+    <style name="AppThemeBlack" parent="@android:style/Theme.Holo.Light"/>
+        
+    
 </resources>

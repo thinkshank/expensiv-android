@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.content.Context;
@@ -15,10 +16,9 @@ import android.util.Log;
 
 public class MySqlLiteHelper extends SQLiteOpenHelper {
 	public static final String DB_NAME = "db.expensiv";
-	public static final int DB_VERSION = 4;
+	public static final int DB_VERSION = 5;
 
 	public static final String TABLE_EXPENSES = "expenses";
-
 	public static final String EXPENSES_ID = "id";
 	public static final String EXPENSES_DATE = "date";
 	public static final String EXPENSES_COST = "cost";
@@ -27,8 +27,22 @@ public class MySqlLiteHelper extends SQLiteOpenHelper {
 	public static final String EXPENSES_SUB_CATEGORY = "sub_category";
 	public static final String EXPENSES_MSG_ID = "msg_id";
 	public static final String EXPENSES_DEBIT_CREDIT = "debit_credit";
+	
+	public static final String TABLE_BANK_SMS = "BANK_SMS";
+	public static final String BANK_SMS_ID = "ID";
+	public static final String BANK_SMS_SERVICE_PROVIDER = "SERVICE_PROVIDER";
+	public static final String BANK_SMS_TITLE = "TITLE";
+	public static final String BANK_SMS_PHONE_NO= "PHONE_NO";
+	public static final String BANK_SMS_DESCRIPTION= "DESCRIPTION";
+	public static final String BANK_SMS_SMS_TEXT= "SMS_TEXT";
+	public static final String BANK_SMS_CREATED_BY = "CREATED_BY";
+	
+	public static final String TABLE_BANK = "BANK";
+	public static final String BANK_ID = "ID";
+	public static final String BANK_NAME = "NAME";
+	public static final String BANK_SMS_CODE = "SMS_CODE";
 
-	private static final String CREATE_TABLE_EXPENSES = "" + "CREATE TABLE "
+	private static final String CREATE_TABLE_EXPENSES = "" + "CREATE TABLE IF NOT EXISTS "
 			+ TABLE_EXPENSES + "( " + EXPENSES_ID
 			+ " integer primary key autoincrement " + " , " + EXPENSES_DATE
 			+ " text " + " , " + EXPENSES_COST + " text " + " , "
@@ -53,10 +67,22 @@ public class MySqlLiteHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_EXPENSES);
 		Log.e("shashank", CREATE_TABLE_EXPENSES);
 		// db.execSQL(INSERT_TEST_DATA);
+		
+		Log.i("shashank", "dropping table BANK_SMS if exists");
+		db.execSQL(SQLStatements.DROP_BANK_SMS);
+		Log.i("shashank", "creating table BANK_SMS if not exists");
+		db.execSQL(SQLStatements.CREATE_BANK_SMS);
+		Log.i("shashank", "inserting data");
+		ArrayList<String> insertlist = new SQLStatements().getBankSMSInsertSQL();
+		for (String s : insertlist)
+			{db.execSQL(s);}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.i("shashank", "old version - " + oldVersion);
+		Log.i("shashank", "new version - " + newVersion);
+		
 		Log.w(MySqlLiteHelper.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + "This will destroy all old data");
@@ -104,9 +130,21 @@ public class MySqlLiteHelper extends SQLiteOpenHelper {
 			 */
 
 			/* db.execSQL(" DROP TABLE " + TABLE_EXPENSES + "_TEMP"); */
-		} else {
+		} 
+		if (newVersion == 5) {
+			Log.i("shashank", "executing code for newversion = 5" );
+			Log.i("shashank", "dropping table if exists");
+			db.execSQL(SQLStatements.DROP_BANK_SMS);
+			Log.i("shashank", "creating table if not exists");
+			db.execSQL(SQLStatements.CREATE_BANK_SMS);
+			Log.i("shashank", "inserting data");
+			ArrayList<String> insertlist = new SQLStatements().getBankSMSInsertSQL();
+			for (String s : insertlist)
+				{db.execSQL(s);}
+			}
+		else {
 			
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
+			//db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
 			onCreate(db);
 			
 		}
